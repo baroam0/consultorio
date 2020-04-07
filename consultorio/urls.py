@@ -16,6 +16,60 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from .views import home, loginusuario, salir
+
+from apps.bancos.views import listadodatosbancarios, nuevodatobancario, editardatobancario
+
+from apps.catalogosenfermedades.views import ajaxcatalogo
+
+from apps.obrassociales.views import editarobrasocial, nuevaobrasocial, \
+    obrasociallistado, prestacionlistado, nuevaprestacion, editarprestacion, \
+    nucleadorprestacionlistado, nuevonucleadorprestacion, \
+    editarnucleadorprestacion, ajaxobrasocial
+
+from apps.pacientes.views import listadopaciente, nuevopaciente, \
+    editarpaciente, listadopacienteobrasocial, nuevopacienteobrasocial, \
+    editarpacienteobrasocial
+
+from apps.profesionales.views import listadoprofesional, \
+    editarprofesional, perfil
+
+"""
+from apps.turnos.views import turnoasistencia, turnolistado, turnonuevo, \
+    turnoborrar, turnoeditar
+"""
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', home),
+    path('login/', loginusuario),
+    path('salir/', salir),
+    path('ajaxobrasocial/', ajaxobrasocial),
+    path('ajaxcatalogo/', ajaxcatalogo),
+    path('datosbancarioslistado/', listadodatosbancarios),
+    path('datobancarionuevo/', nuevodatobancario),
+    path('datobancarioeditar/<int:pk>/', editardatobancario),
+    path('nucleadorprestacionlistado/', nucleadorprestacionlistado),
+    path('nucleadorprestacionnuevo/', nuevonucleadorprestacion),
+    path('nucleadorprestacioneditar/<int:pk>/', editarnucleadorprestacion),
+    path('obrasociallistado/', obrasociallistado),
+    path('obrasocialnuevo/', nuevaobrasocial),
+    path('obrasocialeditar/<int:pk>/', editarobrasocial),
+    path('prestacionlistado/', prestacionlistado),
+    path('prestacionnueva/', nuevaprestacion),
+    path('prestacioneditar/<int:pk>/', editarprestacion),
+    path('pacientelistado/', listadopaciente),
+    path('pacientenuevo/', nuevopaciente),
+    path('pacienteeditar/<int:pk>/', editarpaciente),
+    path('pacienteobrasociallistado/', listadopacienteobrasocial),
+    path('pacienteobrasocialnuevo/', nuevopacienteobrasocial),
+    path('pacienteobrasocialeditar/<int:pk>/', editarpacienteobrasocial),
+    path('profesionallistado/', listadoprofesional),
+    path('perfil/', perfil),
+    path('profesionaleditar/<int:pk>/', editarprofesional),
+    #path('turnoasistencia/', turnoasistencia),
+    #path('turnolistado/', turnolistado),
+    #path('turnonuevo/', turnonuevo),
+    #path('turnoborrar/', turnoborrar),
+    #path('turnoeditar/<int:pk>/', turnoeditar),
 ]

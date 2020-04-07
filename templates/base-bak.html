@@ -1,0 +1,89 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="{% static 'vendor/fontawesome-free/css/all.min.css' %"}  >
+        <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/select2.min.css' %}"/>
+        
+    </head>
+
+    <body id="packt">
+
+        <nav class="navbar navbar-expand-md navbar-light bg-light">
+
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        
+            <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+
+                <div class="navbar-nav">
+
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Obras Sociales</a>
+                        <div class="dropdown-menu">
+                            <a href="/obrasociallistado" class="dropdown-item">
+                                <i data-feather="search"></i>
+                                Buscar
+                            </a>
+                        </div>
+                    </div>
+
+
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pacientes</a>
+                        <div class="dropdown-menu">
+                            <a href="/pacientelistado" class="dropdown-item">
+                                <i data-feather="search"></i>
+                                Buscar
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Profesionales</a>
+                        <div class="dropdown-menu">
+                            <a href="/profesionallistado/" class="dropdown-item">
+                                <i data-feather="search"></i>
+                                Buscar
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Turnos</a>
+                        <div class="dropdown-menu">
+                            <a href="/turnolistado/" class="dropdown-item">
+                                <i data-feather="search"></i>
+                                Buscar
+                            </a>
+                        </div>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </nav>
+
+        <div class="row"></div>
+        <div class="row"></div>
+
+        {% block content%}
+        {% endblock %}
+
+        <script src="{% static 'js/jquery-3.4.1.slim.min.js' %}"></script>
+        <script src="{% static 'js/popper.min.js' %}"></script>
+        <script src="{% static 'js/bootstrap.min.js' %}"></script>
+        <script src="{% static 'js/select2.min.js' %}"></script>
+        <script src="{% static 'js/feather.min.js' %}"></script>
+        <script> feather.replace() </script>
+
+        {% block js_extra %}
+        {% endblock %}
+
+    </body>
+</html>

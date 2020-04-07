@@ -1,0 +1,80 @@
+
+
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="container">
+
+        <br>
+        <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <h2>TURNOS</h2>
+            </div>
+            <div class="col-sm-4"></div>
+        </div>
+
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-warning" role="alert">
+                    {{message}}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+
+        <div class="row">
+            
+            <div class="col-12">
+                <hr>
+                <form method="POST">{% csrf_token %}
+                    
+                    {{ form.as_p }}
+
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-2">
+                            <button class="btn btn-primary" id="btn-guardar" type="submit">
+                                <i data-feather="check"></i>
+                                Aceptar
+                            </button>
+                        </div>
+
+                        <div class="col-8">
+                        </div>
+
+                        <div class="col-2">    
+                            <button type="button" class="btn btn-danger" id="btn-cancelar" onclick="IrListadoTurno()">
+                                <i data-feather="x-circle"></i>
+                                Cancelar
+                            </button>
+                        </div>                        
+                    </div>
+                </form>
+            </div>
+            
+        </div>
+        
+    </div>
+
+{% endblock %}
+
+{% block js_extra %}
+
+    <script>
+
+        $(document).ready(function () {
+            $('#id_paciente').select2();
+            $('#id_profesional').select2();
+            $('#id_obrasocial').select2();
+        });
+
+        function IrListadoTurno() {
+            window.location.replace("/turnolistado");
+        }
+    </script>
+
+{% endblock %}
