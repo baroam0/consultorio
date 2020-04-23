@@ -54,9 +54,7 @@ def listadopaciente(request):
 def nuevopaciente(request):
     if request.POST:
         form = PacienteForm(request.POST)
-
         existe = verifica_paciente(request.POST['numero_documento'])
-
         if existe == True:
             messages.success(request, "EL PACIENTE YA EXISTE EN LOS REGISTROS")
             return redirect('/pacientelistado')
@@ -71,7 +69,7 @@ def nuevopaciente(request):
             else:
                 return render(
                     request,
-                    'pacientes/paciente_nuevo.html',
+                    'pacientes/paciente_edit.html',
                     {
                         "form": form,
                     })
@@ -79,7 +77,7 @@ def nuevopaciente(request):
         form = PacienteForm()
         return render(
             request,
-            'pacientes/paciente_nuevo.html',
+            'pacientes/paciente_edit.html',
             {
                 "form": form,
             }

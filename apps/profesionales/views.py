@@ -3,6 +3,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.forms import inlineformset_factory
 from django.shortcuts import render, redirect
 
 from .models import Profesional
@@ -36,43 +37,22 @@ def perfil(request):
         profesional = Profesional.objects.get(usuario=usuario)
     except Profesional.DoesNotExist:
         profesional = None
-
+    
     if request.POST:
-        if profesional:
-            profesional = Profesional.objects.get(
-                usuario=usuario.profesional.pk
-            )
-            form_user = UsuarioForm(request.POST, instance=usuario)
-            form = ProfesionalForm(request.POST, instance=profesional)
-            if form_user.is_valid:
-                if form.is_valid():
-                    form_user.save()
-                    form.save()
-                    messages.success(request,"SE HAN GUARDADO EL PROFESIONAL")
-                    return redirect('/')
-        else:
-            form_user = UsuarioForm(
-                request.POST, instance=usuario)
-            form = ProfesionalForm(request.POST)
-            if form_user.is_valid():
-                form_user.save()
-                if form.is_valid:
-                    form.save()                    
-                    messages.success(request,"SE HAN GUARDADO EL PROFESIONAL")
-                    return redirect('/')
+        
+        form_user = UsuarioForm(request.POST)
+        form = ProfesionalForm(request.POST)
+        return render(
+            request,
+            'profesionales/profesional_edit.html',
+            {
+                "form": form,
+                "form_user": form_user,
+            }
+        )
     else:
         form_user = UsuarioForm(instance=usuario)
-        try:
-            profesional = Profesional.objects.get(usuario=usuario)
-        except Profesional.DoesNotExist:
-            profesional = None
-
-        if profesional is not None:
-            profesional = Profesional.objects.get(usuario=usuario)
-            form = ProfesionalForm(instance=profesional)
-        else:
-            form = ProfesionalForm()
-
+        form = ProfesionalForm()
         return render(
             request,
             'profesionales/profesional_edit.html',
@@ -83,6 +63,36 @@ def perfil(request):
         )
 
 
+def crearprofesional(request):
+    if request.POST:
+        form_usuario = UsuarioForm(request.POST)
+        form = ProfesionalForm(request.POST)
+        if form_usuario.is_valid and form.is_valid:
+            usuario = form_usuario.save()
+            usuario = User.objects.latest('pk')
+            profesional = form.save(instance=usuario)
+
+
+            messages.success(request, "SE HAN ACTUALIZADO EL PROFESIONAL")
+            return redirect('/profesionallistado')
+        else:return render(
+                request,
+                'profesionales/profesional_edit.html',
+                {"form": form}
+        )
+    else:
+        form_usuario = UsuarioForm()
+        form = ProfesionalForm()
+        return render(
+            request,
+            'profesionales/profesional_edit.html',
+            {
+                "form_usuario": form_usuario,
+                "form": form
+            }
+        )
+
+   
 def editarprofesional(request, pk):
     consulta = Profesional.objects.get(pk=pk)
     if request.POST:

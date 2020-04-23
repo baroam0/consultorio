@@ -13,7 +13,7 @@ class Especialidad(models.Model):
 
 
 class Profesional(models.Model):
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    usuario = models.OneToOneField(User, on_delete=models.CASCADE)
     especialidad = models.ManyToManyField(Especialidad)
     numero_prestador = models.IntegerField(null=True, blank=True)
     numero_prestador_vencimiento = models.DateField(null=True, blank=True)

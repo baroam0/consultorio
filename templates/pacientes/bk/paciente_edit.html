@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <div class="container">
+
+        <br>
+        <div class="row">
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <h2>DATOS DE PACIENTES</h2>
+            </div>
+
+            <div class="col-sm-4"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-12">
+                {% if mensaje %}
+                    <div class="alert alert-danger" role="alert">
+                        {{mensaje}}
+                    <button type="button" class="btn btn-link btn-sm" onclick="location.href='/pacienteobrasocialnuevo/'">
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+                    </div>
+                {% endif %}
+
+                {% if obrassociales %}
+                    {% for obrasocial in obrassociales %}
+                        <div class="alert alert-secondary" role="alert">
+                            OBRA SOCIAL: {{obrasocial.obrasocial}} - {{obrasocial.numeroafiliado}}
+                            <button type="button" class="btn btn-flat btn-sm" onclick="location.href='/pacienteobrasocialeditar/' + {{ obrasocial.pk }}">
+                                <i class="fas fa-pencil-alt"></i>
+                            </button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    
+
+        <div class="row">
+            <div class="col-12">
+                <hr>
+                <form id="frm_datos" method="POST">{% csrf_token %}
+
+                    {{ form.as_p}}
+                  
+                    <br>
+
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-2">
+                            <button class="btn btn-primary" id="btn-guardar" type="submit">
+                                <i class="fas fa-check"></i>
+                                Aceptar
+                            </button>
+                        </div>
+
+                        <div class="col-8">
+                        </div>
+
+                        <div class="col-2">    
+                            <button type="button" class="btn btn-danger" id="btn-cancelar" onclick="IrListadoPaciente()">
+                                <i class="far fa-times-circle"></i>
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                    <hr>
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+
+{% endblock %}
+
+
+{% block js_extra %}
+
+    <script>
+
+        $(document).ready(function () {
+
+            $('#id_obrasocial').select2({
+                language: {
+                    inputTooShort: function() {
+                        return 'Por favor ingrese 2 caracteres';
+                    },
+                    noResults: function() {
+                        return "No se encontraron resultados";
+                    },
+                },
+                minimumInputLength: 2,
+                ajax: {
+                    url: '/ajaxobrasocial/',
+                    processResults: function (data) {
+                        return {
+                            results: $.map(data, function (item) {
+                                return {
+                                    text: item.text,
+                                    id: item.id
+                                }
+                            })
+                        };
+                    }
+                }
+            });
+
+            $('#id_profesional_tratante').select2();
+
+            $('#id_diagnostico').select2({
+                language: {
+                    inputTooShort: function() {
+                        return 'Por favor ingrese 2 caracteres';
+                    },
+                    noResults: function() {
+                        return "No se encontraron resultados";
+                    },
+                },
+                minimumInputLength: 2,
+                ajax: {
+                    url: '/ajaxcatalogo/',
+                    processResults: function (data) {
+                        return {
+                            results: $.map(data, function (item) {
+                                return {
+                                    text: item.text,
+                                    id: item.id
+                                }
+                            })
+                        };
+                    }
+                }
+            });
+
+        });
+
+        function IrListadoPaciente() {
+            window.location.replace("/pacientelistado");
+        }        
+
+    </script>
+
+{% endblock %}

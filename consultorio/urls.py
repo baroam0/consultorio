@@ -32,7 +32,7 @@ from apps.pacientes.views import listadopaciente, nuevopaciente, \
     editarpacienteobrasocial
 
 from apps.profesionales.views import listadoprofesional, \
-    editarprofesional, perfil
+    editarprofesional, perfil, crearprofesional
 
 """
 from apps.turnos.views import turnoasistencia, turnolistado, turnonuevo, \
@@ -65,6 +65,7 @@ urlpatterns = [
     path('pacienteobrasocialnuevo/', nuevopacienteobrasocial),
     path('pacienteobrasocialeditar/<int:pk>/', editarpacienteobrasocial),
     path('profesionallistado/', listadoprofesional),
+    path('profesionalnuevo/', crearprofesional),
     path('perfil/', perfil),
     path('profesionaleditar/<int:pk>/', editarprofesional),
     #path('turnoasistencia/', turnoasistencia),
