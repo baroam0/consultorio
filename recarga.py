@@ -112,7 +112,6 @@ def carga_paciente():
         print("Grabando...")
     cursor.close()
 
-
     cursor = conexion.cursor()
     pacientes = cursor.execute(''' SELECT * FROM pacientes_paciente ''')
     for i in pacientes.fetchall():
