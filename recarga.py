@@ -30,7 +30,7 @@ def carga_banco():
 
 def carga_cie10():
     a = 1
-    with open('cie10.csv', 'r') as csv_file:
+    with open('cie10.csv', 'r', encoding = "ISO-8859-1") as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=',')
         for i in csv_reader:
             catalogo = Catalogo(
