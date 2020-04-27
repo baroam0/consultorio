@@ -59,7 +59,7 @@
                 <tbody>
                     {% for resultado in resultados %}
                     <tr>
-                        <td>{{resultado.apellido.upper }} , {{resultado.nombre.upper }}</td>
+                        <td> {{resultado}}</td>
                         <td>
                             {% for especialidad in resultado.especialidad.all %}
                                 {{ especialidad }} <br>

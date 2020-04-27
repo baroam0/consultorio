@@ -62,7 +62,7 @@
                     {% for resultado in resultados %}
                     <tr>
                         <!--td>{{resultado.usuario.last_name.upper}}, {{resultado.usuario.first_name.upper}} </td-->
-                        <td>{{ resultado.titular }} </td>
+                        <td>{{ resultado.titular.last_name }}, {{ resultado.titular.first_name }}  </td>
                         <td>{{resultado.banco }}</td>
                         <td>{{resultado.tipocuenta}}</td>
                         <td>{{resultado.cbu}}</td>

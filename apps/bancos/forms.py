@@ -1,7 +1,7 @@
 
 from django import forms
 from django.contrib.auth.models import User
-from .models import DatosBancarios, Banco, TipoCuenta, Titular
+from .models import DatosBancarios, Banco, TipoCuenta
 
 
 class DatosBancariosForm(forms.ModelForm):
@@ -22,7 +22,7 @@ class DatosBancariosForm(forms.ModelForm):
     """
 
     titular = forms.ModelChoiceField(
-        queryset=Titular.objects.all().exclude(username="admin"),
+        queryset=User.objects.all().exclude(username="admin"),
         required=True)
 
     def __init__(self, *args, **kwargs):
