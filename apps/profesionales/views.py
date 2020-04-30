@@ -87,7 +87,10 @@ def crearprofesional(request):
             return render(
                 request,
                 'profesionales/profesional_edit.html',
-                {"form": form}
+                {
+                    "form": form,
+                    "form_usuario": form_usuario
+                }
             )
     else:
         form_usuario = UsuarioForm()

@@ -20,9 +20,6 @@ def listadodatosbancarios(request):
         consulta = DatosBancarios.objects.all()
     else:
         consulta = DatosBancarios.objects.filter(usuario=usuario)
-    
-    print("***************************")
-    print(consulta)
 
     paginador = Paginator(consulta, 20)
 

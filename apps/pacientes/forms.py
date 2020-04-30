@@ -30,7 +30,7 @@ class PacienteForm(forms.ModelForm):
     ocupacion = forms.CharField(label="Ocupacion", required=False)
     fecha_admision = forms.DateField(label="Fecha Admision", required=False)
     profesional_tratante = forms.ModelChoiceField(
-        queryset=Profesional.objects.all(),
+        queryset=Profesional.objects.all().order_by("-usuario"),
         label = 'Profesional Tratante',
         required=True,
     )
