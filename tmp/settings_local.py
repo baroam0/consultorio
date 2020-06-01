@@ -20,13 +20,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = ')6&3ucjzl5%akfqxds%u=zs&(%$cz$6cj4ebtj0@11#k^%5s$$'
+SECRET_KEY = 'jsez9tnza5c^d(9_e!^_70cm^jmfn4vj$i#w%jri0pnx9j_--+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
-#ALLOWED_HOSTS = [u'libellafsa.pythonanywhere.com']
 
 
 # Application definition
@@ -43,7 +42,6 @@ INSTALLED_APPS = [
     'apps.obrassociales',
     'apps.pacientes',
     'apps.profesionales',
-    'apps.turnos',
 ]
 
 MIDDLEWARE = [

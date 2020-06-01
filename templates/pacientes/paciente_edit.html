@@ -19,9 +19,13 @@
                 {% if mensaje %}
                     <div class="alert alert-danger" role="alert">
                         {{mensaje}}
-                    <button type="button" class="btn btn-link btn-sm" onclick="location.href='/pacienteobrasocialnuevo/'">
+                    <!--button type="button" class="btn btn-link btn-sm" onclick="location.href='/pacienteobrasocialnuevo/'">
                             <i class="fas fa-pencil-alt"></i>
-                        </button>
+                    </button-->
+
+                    <button type="button" data-toggle="modal" data-target="#modal-obrasocial" class="btn btn-link btn-sm">
+                        <i class="fas fa-pencil-alt"></i>
+                    </button>
                     </div>
                 {% endif %}
 
@@ -32,7 +36,6 @@
                             <button type="button" class="btn btn-flat btn-sm" onclick="location.href='/pacienteobrasocialeditar/' + {{ obrasocial.pk }}">
                                 <i class="fas fa-pencil-alt"></i>
                             </button>
-
                         </div>
                     {% endfor %}
                 {% endif %}
@@ -71,6 +74,59 @@
                     </div>
                     <hr>
                 </form>
+
+
+                <div class="modal fade" id="modal-obrasocial">
+                    <div class="modal-dialog modal-xl">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h4 class="modal-title">Obras Sociales</h4>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <p><label for="modal-select-obra-social">Obra Social</label>
+                                <select name="obra_social" required id="modal-select-obra-social" class="form-control">
+                                    <option value="" selected>---------</option>  
+                                </select>
+                            </p>
+                            <br>
+
+                            <p>
+                                <label for="input-modal-obrasocial">Numero de Afiliado</label>
+                                <input type="text" id="input-modal-obrasocial">
+                            </p>
+
+                            <br>
+
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Obra Social</th>
+                                        <th>Numero de Afiliado</th>
+                                        <th>Observacion</th>
+                                        <th>Accion</th>
+                                    </tr>
+                                </thead>
+                
+                                <tbody>
+                                </tbody>
+                            </table>
+
+                          
+                        </div>
+                        <div class="modal-footer justify-content-between">
+                          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                          <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                      </div>
+                      <!-- /.modal-content -->
+                    </div>
+                    <!-- /.modal-dialog -->
+                </div>        
+
             </div>
         </div>
 
@@ -125,6 +181,32 @@
                 minimumInputLength: 2,
                 ajax: {
                     url: '/ajaxcatalogo/',
+                    processResults: function (data) {
+                        return {
+                            results: $.map(data, function (item) {
+                                return {
+                                    text: item.text,
+                                    id: item.id
+                                }
+                            })
+                        };
+                    }
+                }
+            });
+
+
+            $('#modal-select-obra-social').select2({
+                language: {
+                    inputTooShort: function() {
+                        return 'Por favor ingrese 2 caracteres';
+                    },
+                    noResults: function() {
+                        return "No se encontraron resultados";
+                    },
+                },
+                minimumInputLength: 2,
+                ajax: {
+                    url: '/ajaxobrasocial/',
                     processResults: function (data) {
                         return {
                             results: $.map(data, function (item) {

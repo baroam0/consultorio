@@ -28,8 +28,8 @@ from apps.obrassociales.views import editarobrasocial, nuevaobrasocial, \
     editarnucleadorprestacion, ajaxobrasocial
 
 from apps.pacientes.views import listadopaciente, nuevopaciente, \
-    editarpaciente, listadopacienteobrasocial, nuevopacienteobrasocial, \
-    editarpacienteobrasocial
+    editarpaciente
+    
 
 from apps.profesionales.views import listadoprofesional, \
     editarprofesional, perfil, crearprofesional
@@ -61,9 +61,9 @@ urlpatterns = [
     path('pacientelistado/', listadopaciente),
     path('pacientenuevo/', nuevopaciente),
     path('pacienteeditar/<int:pk>/', editarpaciente),
-    path('pacienteobrasociallistado/', listadopacienteobrasocial),
-    path('pacienteobrasocialnuevo/', nuevopacienteobrasocial),
-    path('pacienteobrasocialeditar/<int:pk>/', editarpacienteobrasocial),
+    #path('pacienteobrasociallistado/', listadopacienteobrasocial),
+    #path('pacienteobrasocialnuevo/', nuevopacienteobrasocial),
+    #path('pacienteobrasocialeditar/<int:pk>/', editarpacienteobrasocial),
     path('profesionallistado/', listadoprofesional),
     path('profesionalnuevo/', crearprofesional),
     path('perfil/', perfil),

@@ -125,25 +125,64 @@ def editarpaciente(request, pk):
             )
 
 
-def ajaxpacienteobrasocialnuevo(request):
-    parametro = request.GET.get('term')
+def listadopacienteobrasocial(request):
+    if "txtBuscar" in request.GET:
+        parametro = request.GET.get("txtBuscar")
 
-    consulta = ObraSocial.objects.filter(
-        Q(descripcion__icontains=parametro) |
-        Q(abreviatura__icontains=parametro)
-    )
+        if parametro.isnumeric():
+            consulta = PacienteObraSocial.objects.filter(
+                numeroafiliado__contains=parametro
+            )
+        else:
+            consulta = PacienteObraSocial.objects.filter(
+                Q(paciente__apellido__contains=parametro) | 
+                Q(paciente__nombre__contains=parametro)
+            )
+    else:
+        consulta = PacienteObraSocial.objects.all()
+    paginador = Paginator(consulta, 20)
+    if "page" in request.GET:
+        page = request.GET.get('page')
+    else:
+        page = 1
+    resultados = paginador.get_page(page)
+    return render(request, 'pacientes/pacienteobrasocial_list.html', {'resultados': resultados})
 
-    dict_tmp = dict()
-    list_tmp = list()
 
-    if len(consulta) > 0:
-        for i in consulta:
-            dict_tmp["id"] = i.pk
-            dict_tmp["text"] = i.descripcion.upper()
-            list_tmp.append(dict_tmp)
-            dict_tmp = dict()
+def nuevopacienteobrasocial(request,):
+    
+    if request.POST:
+        form = PacienteObraSocialForm(request.POST)
+        if form.is_valid():
+            pacienteobrasocial = form.save()
+            pacienteobrasocial.save()
+            messages.success(request, "SE HAN GUARDADO LOS DATOS")
+            return redirect('/pacientelistado')
+        else:
+            return render(
+                request,
+                'pacientes/pacienteobrasocial_nuevo.html',
+                {"form": form,})
+    else:
+        form = PacienteObraSocialForm()
+        return render(request, 'pacientes/pacienteobrasocial_edit.html', {"form": form})
 
-    return JsonResponse(list_tmp, safe=False)
+
+def editarpacienteobrasocial(request, pk):
+    consulta = PacienteObraSocial.objects.get(pk=pk)
+
+    if request.POST:
+        form = PacienteObraSocialForm(request.POST, instance=consulta)
+        if form.is_valid():
+            pacienteobrasocial = form.save()
+            pacienteobrasocial.save()
+            messages.success(request, "SE HA MOFICICADO LOS DATOS")
+            return redirect('/pacienteobrasociallistado')
+        else:
+            return render(request, "pacientes/pacienteobrasocial_edit.html", {"form": form})
+    else:
+        form = PacienteObraSocialForm(instance=consulta)
+        return render(request, 'pacientes/pacienteobrasocial_edit.html', {"form": form})
 
 
 # Create your views here.
