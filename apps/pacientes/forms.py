@@ -63,21 +63,23 @@ class PacienteForm(forms.ModelForm):
 
 
 class PacienteObraSocialForm(forms.ModelForm):
+    """
     paciente = forms.ModelChoiceField(
         queryset=Paciente.objects.all(), 
         label="Paciente",
         required=True
     )
+    """
     obrasocial = forms.ModelChoiceField(
-        queryset=ObraSocial.objects.all(), 
+        queryset=ObraSocial.objects.all().order_by("descripcion"), 
         label="Obra Social",
         required=True
     )
     numeroafiliado = forms.CharField(
         label="Numero Afiliado", required=False)
 
-    observacion = forms.CharField(
-        widget=forms.Textarea, label="Observacion", required=False)
+    observaciones = forms.CharField(
+        widget=forms.Textarea, label="Observaciones", required=False)
 
     def __init__(self, *args, **kwargs):
         super(PacienteObraSocialForm, self).__init__(*args, **kwargs)
@@ -88,5 +90,5 @@ class PacienteObraSocialForm(forms.ModelForm):
 
     class Meta:
         model = PacienteObraSocial
-        fields = ['paciente', 'obrasocial', 'numeroafiliado']
+        fields = ['obrasocial', 'numeroafiliado', 'observaciones']
 

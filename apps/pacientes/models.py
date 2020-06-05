@@ -54,7 +54,7 @@ class PacienteObraSocial(models.Model):
     paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, default=1)
     obrasocial = models.ForeignKey(ObraSocial, on_delete=models.CASCADE)
     numeroafiliado = models.CharField(max_length=20, null=True, blank=True)
-    observacion = models.CharField(max_length=500, null=True, blank=True)
+    observaciones = models.CharField(max_length=500, null=True, blank=True)
 
     def __str__(self):
         return str(self.paciente) + '-' + str(self.obrasocial) + '-' + self.numeroafiliado 

@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 
 from .forms import PacienteForm, PacienteObraSocialForm
@@ -65,7 +66,7 @@ def nuevopaciente(request):
                 messages.success(
                     request,
                     "SE HAN GUARDADO LOS DATOS DEL PACIENTE " + str(consulta.apellido).upper() + ', ' + str(consulta.nombre).upper())
-                return redirect('/pacienteobrasocialnuevo')
+                return redirect('/pacienteeditar/' + str(consulta.pk))
             else:
                 return render(
                     request,
@@ -97,6 +98,7 @@ def editarpaciente(request, pk):
             return render(request, "pacientes/paciente_edit.html", {"form": form})
     else:
         form = PacienteForm(instance=consulta)
+        form_obrasocial = PacienteObraSocialForm()
         tiene_obrasocial = verifica_obrasocial(consulta)
         if tiene_obrasocial == False:
             mensaje = "ESTE PACIENTE NO POSEE OBRA SOCIAL REGISTRADA"
@@ -105,6 +107,7 @@ def editarpaciente(request, pk):
                 'pacientes/paciente_edit.html',
                 {
                     "form": form,
+                    "form_obrasocial": form_obrasocial,
                     "mensaje": mensaje,
                     "anios": anios,
                     "paciente": consulta.pk,
@@ -145,5 +148,11 @@ def ajaxpacienteobrasocialnuevo(request):
 
     return JsonResponse(list_tmp, safe=False)
 
+
+@csrf_exempt
+def ajax_grabarpacienteobrasocialnuevo(request):
+    print("***********************************")
+    print(request.POST["datos"])
+    print("***********************************")
 
 # Create your views here.
