@@ -1,9 +1,11 @@
 
-import json
+import ast
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.core import serializers
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 
@@ -151,8 +153,18 @@ def ajaxpacienteobrasocialnuevo(request):
 
 @csrf_exempt
 def ajax_grabarpacienteobrasocialnuevo(request):
-    print("***********************************")
-    print(request.POST["datos"])
-    print("***********************************")
+    datos = ast.literal_eval(request.POST["datos"]) 
+    paciente = Paciente.objects.get(pk=datos["paciente"])
+    obraosocial = ObraSocial.objects.get(pk=int(datos["obrasocial"]))
+    paciente_obrasocial = PacienteObraSocial(
+        paciente = paciente,
+        obrasocial = obraosocial,
+        numeroafiliado = datos["numeroafiliado"],
+        observaciones = datos["observaciones"],
+    )
+    paciente_obrasocial.save()
+    consulta = PacienteObraSocial.objects.filter(paciente=paciente).select_related('obrasocial')
+    consulta = list(consulta.values()) 
+    return JsonResponse(consulta, safe=False) 
 
 # Create your views here.

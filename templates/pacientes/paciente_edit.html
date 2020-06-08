@@ -87,12 +87,11 @@
                         </div>
                         <div class="modal-body">
 
-                            
-                            {{form_obrasocial.as_p}}
-                            
+                            <form id="form-pacienteobrasocial">
+                                {{form_obrasocial.as_p}}
+                            </form>
 
-
-                            <table class="table table-hover">
+                            <table class="table table-hover" id="tabla-pacienteobrasocial">
                                 <thead>
                                     <tr>
                                         <th>Obra Social</th>
@@ -196,22 +195,23 @@
         });
 
         function GrabarPacienteObraSocial(){
+            var str_url = window.location.href;
+            str_url = str_url.split("/");
+            var id_paciente = str_url.slice(-2)[0]
 
             var obrasocial = $("#id_obrasocial").val();
             var numeroafiliado = $("#id_numeroafiliado").val();
-            var observacion = $("#id_observaciones").val();
-
-            
+            var observacion = $("#id_observaciones").val();            
 
             var JsonObj = new Object();
 
             JsonObj = {
+                "paciente": id_paciente,
                 "obrasocial": obrasocial,
                 "numeroafiliado": numeroafiliado,
                 "observaciones": observacion,
             }
 
-            console.log(JsonObj);
 
             $.ajax({
                 type: "POST",
@@ -219,9 +219,17 @@
                 data: {
                     datos: JSON.stringify(JsonObj),
                 }, 
-                dataType: "application/json",
-                success: function (response) {
-                    alert(response);
+                success: function (data) {
+                    console.log("+++++++++++++++++++++++++");
+                    console.log(data);
+                    $.each(data, function (i, item) {
+                        console.log(item[0]);
+                        console.log(item[1]);
+                        $('<tr>').append(
+                        $('<td>').text(item.obrasocial),
+                        $('<td>').text(item.numeroafiliado),
+                        $('<td>').text(item.observaciones)).appendTo('#tabla-pacienteobrasocial');
+                    });
                 }
             });
 
@@ -230,8 +238,6 @@
         function IrListadoPaciente() {
             window.location.replace("/pacientelistado");
         }
-
-
 
     </script>
 
