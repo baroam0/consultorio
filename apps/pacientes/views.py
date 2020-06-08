@@ -163,8 +163,31 @@ def ajax_grabarpacienteobrasocialnuevo(request):
         observaciones = datos["observaciones"],
     )
     paciente_obrasocial.save()
-    consulta = PacienteObraSocial.objects.filter(paciente=paciente).select_related('obrasocial')
-    consulta = list(consulta.values()) 
-    return JsonResponse(consulta, safe=False) 
+    
+    #consulta = PacienteObraSocial.objects.filter(paciente=paciente).select_related('obrasocial')
+    consulta = PacienteObraSocial.objects.filter(paciente=paciente)
+
+    print("*******************************************")
+    for i in consulta:
+        print(i.pk)
+        print(i.obrasocial)
+        print(i.numeroafiliado)
+        print(i.observaciones)
+    
+    dict_tmp = dict()
+    list_tmp = list()
+
+    if len(consulta) > 0:
+        for i in consulta:
+            dict_tmp["id_obrasocial"] = i.pk
+            dict_tmp["descripcion"] = i.obrasocial.descripcion
+            dict_tmp["numeroafiliado"] = i.numeroafiliado
+            dict_tmp["observaciones"] = i.observaciones
+            list_tmp.append(dict_tmp)
+            dict_tmp = dict()
+
+    return JsonResponse(list_tmp, safe=False)
+
+    
 
 # Create your views here.

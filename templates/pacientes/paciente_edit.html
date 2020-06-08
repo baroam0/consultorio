@@ -220,15 +220,12 @@
                     datos: JSON.stringify(JsonObj),
                 }, 
                 success: function (data) {
-                    console.log("+++++++++++++++++++++++++");
-                    console.log(data);
                     $.each(data, function (i, item) {
-                        console.log(item[0]);
-                        console.log(item[1]);
-                        $('<tr>').append(
-                        $('<td>').text(item.obrasocial),
+                        $('<tr id=' + item.id_obrasocial + '>').append(
+                        $('<td>').text(item.descripcion),
                         $('<td>').text(item.numeroafiliado),
-                        $('<td>').text(item.observaciones)).appendTo('#tabla-pacienteobrasocial');
+                        $('<td>').text(item.observaciones),
+                        $('<td>').html('<button type="button" class="btn btn-link btn-sm"><i class="fas fa-pencil-alt"></i></button>')).appendTo('#tabla-pacienteobrasocial')
                     });
                 }
             });
@@ -237,6 +234,10 @@
 
         function IrListadoPaciente() {
             window.location.replace("/pacientelistado");
+        }
+
+        function LinmpiarTablaModal(){
+            
         }
 
     </script>
