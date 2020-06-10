@@ -8,7 +8,7 @@
         <div class="row">
             <div class="col-sm-4"></div>
             <div class="col-sm-4">
-                <h2>DATOS DE PACIENTES</h2>
+                <h3>DATOS DE PACIENTES</h3>
             </div>
 
             <div class="col-sm-4"></div>
@@ -29,15 +29,15 @@
                     </div>
                 {% endif %}
 
-                {% if obrassociales %}
-                    {% for obrasocial in obrassociales %}
-                        <div class="alert alert-secondary" role="alert">
-                            OBRA SOCIAL: {{obrasocial.obrasocial}} - {{obrasocial.numeroafiliado}}
-                            <button type="button" class="btn btn-flat btn-sm" onclick="location.href='/pacienteobrasocialeditar/' + {{ obrasocial.pk }}">
-                                <i class="fas fa-pencil-alt"></i>
-                            </button>
-                        </div>
-                    {% endfor %}
+                {% if paciente_obrassociales %}
+                    
+                    <div class="alert alert-secondary" role="alert">
+                        OBRA SOCIAL: EL PACIENTE POSEE OBRA SOCIAL REGISTRADA
+                        <button type="button" data-toggle="modal" data-target="#modal-obrasocial" class="btn btn-link btn-sm">
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+
+                    </div>
                 {% endif %}
             </div>
         </div>
@@ -103,6 +103,22 @@
                                 </thead>
                 
                                 <tbody>
+                                    {% if paciente_obrassociales %}
+                                        {% for obrasocial in paciente_obrassociales %}
+                                            <tr id="{{obrasocial.obrasocial.pk}}"">
+                                                <td>{{obrasocial.pk}}</td>
+                                                <td>{{obrasocial.obrasocial.descripcion}}</td>
+                                                <td>{{obrasocial.numeroafiliado}}</td>
+                                                <td>{{obrasocial.observaciones}}</td>
+                    
+                                                <td>
+                                                    <button type="button" class="btn btn-link btn-sm btnSelect" onclick="javascript:LeerFilaTablaModal()">
+                                                        <i class="fas fa-pencil-alt"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    {% endif %}
                                 </tbody>
                             </table>
 
@@ -138,7 +154,18 @@
 
     <script>
 
+        var editar = false;
+        var paciente_obrasocial = "";
+
         $(document).ready(function () {
+
+            $('#modal-obrasocial').on('shown.bs.modal', function (e) {
+                LimpiarFormularioModal();
+            })
+
+            $('#modal-obrasocial').on('hidden.bs.modal', function (e) {
+                window.location.reload()
+            })
            
             $('#id_profesional_tratante').select2();
 
@@ -195,8 +222,9 @@
 
         });
 
-        function GrabarPacienteObraSocial(){
+        function EditarPacienteObraSocial(){
             LimpiarTablaModal();
+
             var str_url = window.location.href;
             str_url = str_url.split("/");
             var id_paciente = str_url.slice(-2)[0]
@@ -209,53 +237,113 @@
 
             JsonObj = {
                 "paciente": id_paciente,
+                "paciente_obrasocial": paciente_obrasocial,
                 "obrasocial": obrasocial,
                 "numeroafiliado": numeroafiliado,
                 "observaciones": observacion,
             }
 
-
             $.ajax({
                 type: "POST",
-                url: "/ajax-grabarpacienteobrasocial/",
+                url: "/ajax-editarpacienteobrasocial/",
                 data: {
                     datos: JSON.stringify(JsonObj),
                 }, 
                 success: function (data) {
                     $.each(data, function (i, item) {
-                        $('<tr>').append(
-                        $('<td>').text(item.id_obrasocial),
-                        $('<td>').text(item.descripcion),
-                        $('<td>').text(item.numeroafiliado),
-                        $('<td>').text(item.observaciones),
-                        $('<td>').html('<button type="button" class="btn btn-link btn-sm btnSelect" onclick="javascript:LeerFilaTablaModal()"><i class="fas fa-pencil-alt"></i></button>')).appendTo('#tabla-pacienteobrasocial')
+                        $('<tr id="' + item.id_obrasocial + '">').append(
+                            $('<td>').text(item.id_pacienteobrasocial),
+                            $('<td>').text(item.descripcion),
+                            $('<td>').text(item.numeroafiliado),
+                            $('<td>').text(item.observaciones),
+                            $('<td>').html('<button type="button" class="btn btn-link btn-sm btnSelect" onclick="javascript:LeerFilaTablaModal()"><i class="fas fa-pencil-alt"></i></button>')).appendTo('#tabla-pacienteobrasocial')
                     });
+                    LimpiarFormularioModal();
                 }
             });
 
+            editar = false;
+        }
+
+
+        function GrabarPacienteObraSocial(){
+            LimpiarTablaModal();
+
+
+            if(editar==true){
+                EditarPacienteObraSocial()
+            }else{
+
+                var str_url = window.location.href;
+                str_url = str_url.split("/");
+                var id_paciente = str_url.slice(-2)[0]
+
+                var obrasocial = $("#id_obrasocial").val();
+                var numeroafiliado = $("#id_numeroafiliado").val();
+                var observacion = $("#id_observaciones").val();            
+
+                var JsonObj = new Object();
+
+                JsonObj = {
+                    "paciente": id_paciente,
+                    "obrasocial": obrasocial,
+                    "numeroafiliado": numeroafiliado,
+                    "observaciones": observacion,
+                }
+
+                $.ajax({
+                    type: "POST",
+                    url: "/ajax-nuevopacienteobrasocial/",
+                    data: {
+                        datos: JSON.stringify(JsonObj),
+                    }, 
+                    success: function (data) {
+                        $.each(data, function (i, item) {
+                            $('<tr id="' + item.id_obrasocial + '">').append(
+                                $('<td>').text(item.id_pacienteobrasocial),
+                                $('<td>').text(item.descripcion),
+                                $('<td>').text(item.numeroafiliado),
+                                $('<td>').text(item.observaciones),
+                                $('<td>').html('<button type="button" class="btn btn-link btn-sm btnSelect" onclick="javascript:LeerFilaTablaModal()"><i class="fas fa-pencil-alt"></i></button>')).appendTo('#tabla-pacienteobrasocial')
+                        });
+                        LimpiarFormularioModal();
+                    }
+                });
+            }
+            editar = false; 
         }
 
         function IrListadoPaciente() {
             window.location.replace("/pacientelistado");
         }
 
+        function LimpiarFormularioModal(){
+            $("#id_obrasocial").val("");
+            $("#id_numeroafiliado").val("");
+            $("#id_observaciones").val("");
+        }
+
         function LimpiarTablaModal(){
-            //$("#tabla-pacienteobrasocial").empty();
             $("#tabla-pacienteobrasocial > tbody").html("");
         }
 
         function LeerFilaTablaModal(){
+            
             $("#tabla-pacienteobrasocial").on('click','.btnSelect',function(){
-                var currentRow=$(this).closest("tr");          
-                var codigo_obrasocial=currentRow.find("td:eq(0)").text();
-                var descripcion_obrasocial=currentRow.find("td:eq(1)").text();
-                var nroafiliado=currentRow.find("td:eq(2)").text();
-                var observaciones=currentRow.find("td:eq(3)").text();
-                
-                $("#id_numeroafiliado").val(col3);
-            });
-        }
+                var fila=$(this).closest("tr");
+                paciente_obrasocial=fila.find("td:eq(0)").text();
 
+                var nroafiliado=fila.find("td:eq(2)").text();
+                var observaciones=fila.find("td:eq(3)").text();
+
+                $("#id_obrasocial").val(fila[0].id);
+                $("#id_numeroafiliado").val(nroafiliado);
+                $("#id_observaciones").val(observaciones);
+            });
+
+            editar = true;
+            return editar;
+        }
 
 
     </script>

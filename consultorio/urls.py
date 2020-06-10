@@ -28,7 +28,7 @@ from apps.obrassociales.views import editarobrasocial, nuevaobrasocial, \
     editarnucleadorprestacion, ajaxobrasocial
 
 from apps.pacientes.views import listadopaciente, nuevopaciente, \
-    editarpaciente, ajax_grabarpacienteobrasocialnuevo
+    editarpaciente, ajax_nuevopacienteobrasocial, ajax_editarpacienteobrasocial
     
 
 from apps.profesionales.views import listadoprofesional, \
@@ -45,7 +45,8 @@ urlpatterns = [
     path('login/', loginusuario),
     path('salir/', salir),
     path('ajaxobrasocial/', ajaxobrasocial),
-    path('ajax-grabarpacienteobrasocial/', ajax_grabarpacienteobrasocialnuevo),
+    path('ajax-nuevopacienteobrasocial/', ajax_nuevopacienteobrasocial),
+    path('ajax-editarpacienteobrasocial/', ajax_editarpacienteobrasocial),
     path('ajaxcatalogo/', ajaxcatalogo),
     path('datosbancarioslistado/', listadodatosbancarios),
     path('datobancarionuevo/', nuevodatobancario),

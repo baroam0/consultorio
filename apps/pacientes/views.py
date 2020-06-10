@@ -116,7 +116,7 @@ def editarpaciente(request, pk):
                 }
             )
         else:
-            obrassociales = PacienteObraSocial.objects.filter(
+            paciente_obrassociales = PacienteObraSocial.objects.filter(
                 paciente = consulta
             )
             return render(
@@ -124,7 +124,8 @@ def editarpaciente(request, pk):
                 'pacientes/paciente_edit.html',
                 {
                     "form": form,
-                    "obrassociales": obrassociales,
+                    "paciente_obrassociales": paciente_obrassociales,
+                    "form_obrasocial": form_obrasocial,
                     "anios": anios
                 }
             )
@@ -152,7 +153,7 @@ def ajaxpacienteobrasocialnuevo(request):
 
 
 @csrf_exempt
-def ajax_grabarpacienteobrasocialnuevo(request):
+def ajax_nuevopacienteobrasocial(request):
     datos = ast.literal_eval(request.POST["datos"]) 
     paciente = Paciente.objects.get(pk=datos["paciente"])
     obraosocial = ObraSocial.objects.get(pk=int(datos["obrasocial"]))
@@ -164,23 +165,16 @@ def ajax_grabarpacienteobrasocialnuevo(request):
     )
     paciente_obrasocial.save()
     
-    #consulta = PacienteObraSocial.objects.filter(paciente=paciente).select_related('obrasocial')
     consulta = PacienteObraSocial.objects.filter(paciente=paciente)
 
-    print("*******************************************")
-    for i in consulta:
-        print(i.pk)
-        print(i.obrasocial)
-        print(i.numeroafiliado)
-        print(i.observaciones)
-    
     dict_tmp = dict()
     list_tmp = list()
 
     if len(consulta) > 0:
         for i in consulta:
-            dict_tmp["id_obrasocial"] = i.pk
-            dict_tmp["descripcion"] = i.obrasocial.descripcion
+            dict_tmp["id_pacienteobrasocial"] = i.pk
+            dict_tmp["id_obrasocial"] = i.obrasocial.pk
+            dict_tmp["descripcion"] = i.obrasocial.descripcion.upper()
             dict_tmp["numeroafiliado"] = i.numeroafiliado
             dict_tmp["observaciones"] = i.observaciones
             list_tmp.append(dict_tmp)
@@ -188,6 +182,38 @@ def ajax_grabarpacienteobrasocialnuevo(request):
 
     return JsonResponse(list_tmp, safe=False)
 
+
+@csrf_exempt
+def ajax_editarpacienteobrasocial(request):
+    datos = ast.literal_eval(request.POST["datos"])
+
+    paciente_obrasocial = PacienteObraSocial.objects.get(pk=datos["paciente_obrasocial"])
+    obraosocial = ObraSocial.objects.get(pk=int(datos["obrasocial"]))
+  
+    paciente_obrasocial.obrasocial=obraosocial
+    paciente_obrasocial.numeroafiliado=datos["numeroafiliado"]
+    paciente_obrasocial.observaciones=datos["observaciones"]
+
+    paciente_obrasocial.save()
+
+    paciente = Paciente.objects.get(pk=datos["paciente"])
+
+    paciente_obrasocial = PacienteObraSocial.objects.filter(paciente=paciente)
+
+    dict_tmp = dict()
+    list_tmp = list()
+
+    if len(paciente_obrasocial) > 0:
+        for i in paciente_obrasocial:
+            dict_tmp["id_pacienteobrasocial"] = i.pk
+            dict_tmp["id_obrasocial"] = i.obrasocial.pk
+            dict_tmp["descripcion"] = i.obrasocial.descripcion.upper()
+            dict_tmp["numeroafiliado"] = i.numeroafiliado
+            dict_tmp["observaciones"] = i.observaciones
+            list_tmp.append(dict_tmp)
+            dict_tmp = dict()
+
+    return JsonResponse(list_tmp, safe=False)
     
 
 # Create your views here.
