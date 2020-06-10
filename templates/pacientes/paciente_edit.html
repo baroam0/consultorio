@@ -94,6 +94,7 @@
                             <table class="table table-hover" id="tabla-pacienteobrasocial">
                                 <thead>
                                     <tr>
+                                        <th>Codigo</th>
                                         <th>Obra Social</th>
                                         <th>Numero de Afiliado</th>
                                         <th>Observacion</th>
@@ -195,6 +196,7 @@
         });
 
         function GrabarPacienteObraSocial(){
+            LimpiarTablaModal();
             var str_url = window.location.href;
             str_url = str_url.split("/");
             var id_paciente = str_url.slice(-2)[0]
@@ -221,11 +223,12 @@
                 }, 
                 success: function (data) {
                     $.each(data, function (i, item) {
-                        $('<tr id=' + item.id_obrasocial + '>').append(
+                        $('<tr>').append(
+                        $('<td>').text(item.id_obrasocial),
                         $('<td>').text(item.descripcion),
                         $('<td>').text(item.numeroafiliado),
                         $('<td>').text(item.observaciones),
-                        $('<td>').html('<button type="button" class="btn btn-link btn-sm"><i class="fas fa-pencil-alt"></i></button>')).appendTo('#tabla-pacienteobrasocial')
+                        $('<td>').html('<button type="button" class="btn btn-link btn-sm btnSelect" onclick="javascript:LeerFilaTablaModal()"><i class="fas fa-pencil-alt"></i></button>')).appendTo('#tabla-pacienteobrasocial')
                     });
                 }
             });
@@ -236,9 +239,24 @@
             window.location.replace("/pacientelistado");
         }
 
-        function LinmpiarTablaModal(){
-            
+        function LimpiarTablaModal(){
+            //$("#tabla-pacienteobrasocial").empty();
+            $("#tabla-pacienteobrasocial > tbody").html("");
         }
+
+        function LeerFilaTablaModal(){
+            $("#tabla-pacienteobrasocial").on('click','.btnSelect',function(){
+                var currentRow=$(this).closest("tr");          
+                var codigo_obrasocial=currentRow.find("td:eq(0)").text();
+                var descripcion_obrasocial=currentRow.find("td:eq(1)").text();
+                var nroafiliado=currentRow.find("td:eq(2)").text();
+                var observaciones=currentRow.find("td:eq(3)").text();
+                
+                $("#id_numeroafiliado").val(col3);
+            });
+        }
+
+
 
     </script>
 
