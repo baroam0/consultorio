@@ -72,7 +72,7 @@ def nuevopaciente(request):
             else:
                 return render(
                     request,
-                    'pacientes/paciente_edit.html',
+                    'pacientes/paciente_nuevo.html',
                     {
                         "form": form,
                     })
@@ -80,7 +80,7 @@ def nuevopaciente(request):
         form = PacienteForm()
         return render(
             request,
-            'pacientes/paciente_edit.html',
+            'pacientes/paciente_nuevo.html',
             {
                 "form": form,
             }

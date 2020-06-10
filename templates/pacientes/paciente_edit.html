@@ -47,8 +47,79 @@
             <div class="col-12">
                 <hr>
                 <form id="frm_datos" method="POST">{% csrf_token %}
+                    <p>
+                        <label for="id_nombre">Nombre:</label>
+                        {{form.nombre}}
+                    </p>
+                    <p>
+                        <label for="id_apellido">Apellido:</label>
+                        {{form.apellido}}
+                    </p>
+                    <p>
+                        <label for="id_tipodocumento">Tipo Documento:</label>
+                        {{form.tipodocumento}}  
+                    </p>
+                    <p>
+                        <label for="id_numero_documento">Numero Documento:</label>
+                        {{form.numero_documento}}
+                    </p>
+                    <p>
+                        <label for="id_fecha_nacimiento">Fecha Nacimiento:</label>
+                        {{form.fecha_nacimiento}}
+                    </p>
+                    <p>
+                        <label for="id_edad">Edad:</label>
+                        <input type="text" name="edad" class="form-control" id="id_edad" value="{{anios}}" readonly>
+                    </p>
+                    <p>
+                        <label for="id_telefono">Telefono:</label>
+                        {{form.telefono}}
+                    </p>
+                    <p>
+                        <label for="id_telefono_opcional">Telefono Opcional:</label>
+                        {{form.telefono_opcional}}
+                    </p>
+                    <p>
+                        <label for="id_correo_electronico">Correo Electronico:</label>
+                        {{form.correo_electronico}}
+                    </p>
+                    <p>
+                        <label for="id_domicilio">Domicilio:</label>
+                        {{form.domicilio}}
+                    </p>
+                    <p>
+                        <label for="id_ocupacion">Ocupacion:</label>
+                        {{form.ocupacion}}
+                    </p>
+                    <p>
+                        <label for="id_fecha_admision">Fecha Admision:</label>
+                        {{form.fecha_admision}}
+                    </p>
+                    <p>
+                        <label for="id_profesional_tratante">Profesional Tratante:</label>
+                        {{form.profesional_tratante}}
+                    </p>
+                    <p>
+                        <label for="id_medicacion">Medicación:</label>
+                         {{form.medicacion}}
+                    </p>
+                    <p>
+                        <label for="id_fue_al_psicologo">Fue al Psicologo:</label>
+                        {{form.fue_al_psicologo}}
+                    </p>
+                    <p>
+                        <label for="id_grupo_familiar">Grupo Familiar:</label>
+                        {{form.grupo_familiar}}
+                    </p>
+                    <p>
+                        <label for="id_diagnostico">Diagnostico:</label>
+                        {{form.diagnostico}}
+                    </p>
 
-                    {{ form.as_p}}
+                    <p>
+                        <label for="id_observacion">Observacion:</label>
+                        {{form.observacion}}
+                    </p>                  
                   
                     <br>
 
@@ -107,7 +178,7 @@
                                         {% for obrasocial in paciente_obrassociales %}
                                             <tr id="{{obrasocial.obrasocial.pk}}">
                                                 <td>{{obrasocial.pk}}</td>
-                                                <td>{{obrasocial.obrasocial.descripcion}}</td>
+                                                <td>{{obrasocial.obrasocial.descripcion.upper}}</td>
                                                 <td>{{obrasocial.numeroafiliado}}</td>
                                                 <td>{{obrasocial.observaciones}}</td>
                     
