@@ -1,31 +1,38 @@
-from django.shortcuts import render
+
+from django.contrib import messages
+from django.contrib.auth.models import User
+from django.core.paginator import Paginator
+from django.db.models import Q
+from django.shortcuts import render, redirect
+
+from apps.profesionales.models import Profesional
+from apps.turnos.forms import TurnoForm
+from apps.turnos.models import Turno
 
 
 def listadoturno(request):
+
+    profesionales = Profesional.objects.all().order_by('usuario__last_name')
+
     if request.user.is_authenticated:
         usuario = User.objects.get(username=str(request.user.username))
         if not usuario.is_staff:
             usuarioprofesional = Profesional.objects.get(usuario=usuario)
 
     if "txtBuscar" in request.GET:
-        parametro = request.GET.get("txtBuscar")        
+        parametro = request.GET.get("txtBuscar")
         if usuario.is_staff:
-            consulta = Paciente.objects.filter(
-                Q(apellido__icontains=parametro) |
-                Q(nombre__contains=parametro)
+            consulta = Turno.objects.filter(
+                Q(paciente__nombre__icontains=parametro) |
+                Q(paciente__apellido__icontains=parametro)
             )
         else:
-            consulta = Paciente.objects.filter(
-                Q(apellido__icontains=parametro) |
-                Q(nombre__contains=parametro)
-            ).filter(profesional_tratante=usuarioprofesional)
-            #consulta = consulta.filter(profesional_tratante=usuarioprofesional)
-            
+            consulta = Turno.objects.filter(profesional=usuarioprofesional)
     else:
         if usuario.is_staff:
-            consulta = Paciente.objects.all()
+            consulta = Turno.objects.all().order_by('fechahora')
         else:
-            consulta = Paciente.objects.filter(profesional_tratante=usuarioprofesional)
+            consulta = Turno.objects.filter(profesional=usuarioprofesional)
 
     paginador = Paginator(consulta, 20)
     if "page" in request.GET:
@@ -33,8 +40,42 @@ def listadoturno(request):
     else:
         page = 1
     resultados = paginador.get_page(page)
-    return render(request, 'pacientes/paciente_list.html', {'resultados': resultados})
+    return render(
+        request,
+        'turnos/turno_list.html',
+        {
+            'resultados': resultados,
+            'profesionales': profesionales
+        }
+    )
 
+
+def nuevoturno(request):
+    if request.POST:
+        form = TurnoForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            messages.success(
+                request,
+                "SE HAN GUARDADO EL TURNO ")
+            return redirect('/turnolistado/')
+        else:
+            return render(
+                request,
+                'turnos/turno_edit.html',
+                {
+                    "form": form,
+                })
+    else:
+        form = TurnoForm()
+        return render(
+            request,
+            'turnos/turno_edit.html',
+            {
+                "form": form,
+            }
+        )
 
 
 # Create your views here.
