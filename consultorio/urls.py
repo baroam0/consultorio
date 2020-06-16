@@ -28,8 +28,8 @@ from apps.obrassociales.views import editarobrasocial, nuevaobrasocial, \
     editarnucleadorprestacion, ajaxobrasocial
 
 from apps.pacientes.views import listadopaciente, nuevopaciente, \
-    editarpaciente, ajax_nuevopacienteobrasocial, ajax_editarpacienteobrasocial
-    
+    editarpaciente, ajax_obrasocial_paciente, ajax_nuevopacienteobrasocial, \
+    ajax_editarpacienteobrasocial, ajax_profesionaltratante_paciente
 
 from apps.profesionales.views import listadoprofesional, \
     editarprofesional, perfil, crearprofesional
@@ -41,10 +41,17 @@ urlpatterns = [
     path('', home),
     path('login/', loginusuario),
     path('salir/', salir),
+    #SECION AJAX
     path('ajaxobrasocial/', ajaxobrasocial),
+    path('ajax-obrasocialpaciente/<int:pk>', ajax_obrasocial_paciente),
+    path(
+        'ajax-profesionaltratantepaciente/<int:pk>',
+        ajax_profesionaltratante_paciente
+    ),
     path('ajax-nuevopacienteobrasocial/', ajax_nuevopacienteobrasocial),
     path('ajax-editarpacienteobrasocial/', ajax_editarpacienteobrasocial),
     path('ajaxcatalogo/', ajaxcatalogo),
+    #FIN SECCION AJAX
     path('datosbancarioslistado/', listadodatosbancarios),
     path('datobancarionuevo/', nuevodatobancario),
     path('datobancarioeditar/<int:pk>/', editardatobancario),

@@ -130,7 +130,7 @@ def editarpaciente(request, pk):
                 }
             )
 
-
+"""
 def ajaxpacienteobrasocialnuevo(request):
     parametro = request.GET.get('term')
 
@@ -148,6 +148,45 @@ def ajaxpacienteobrasocialnuevo(request):
             dict_tmp["text"] = i.descripcion.upper()
             list_tmp.append(dict_tmp)
             dict_tmp = dict()
+
+    return JsonResponse(list_tmp, safe=False)
+"""
+
+def ajax_obrasocial_paciente(request, pk):
+    paciente  = Paciente.objects.get(pk=pk)
+
+    pacientes_obrasociales = PacienteObraSocial.objects.filter(
+        paciente=paciente
+    )
+
+    dict_tmp = dict()
+    list_tmp = list()
+
+    if pacientes_obrasociales:
+        for dato in pacientes_obrasociales:
+            dict_tmp["id_obrasocial"] = dato.obrasocial.pk
+            dict_tmp["descripcion_obrasocial"] = dato.obrasocial.descripcion
+            list_tmp.append(dict_tmp)
+    else:
+        pacientes_obrasociales = None
+
+    return JsonResponse(list_tmp, safe=False)
+
+
+def ajax_profesionaltratante_paciente(request, pk):
+    paciente  = Paciente.objects.get(pk=pk)
+    profesional = Profesional.objects.get(pk=paciente.profesional_tratante.pk)
+    nombre_profesional = str(profesional.usuario.first_name) + ', ' + str(profesional.usuario.last_name)
+
+    dict_tmp = dict()
+    list_tmp = list()
+
+    if paciente:
+        dict_tmp["id_profesional"] = profesional.pk
+        dict_tmp["profesional"] = nombre_profesional
+        list_tmp.append(dict_tmp)
+    else:
+        paciente = None
 
     return JsonResponse(list_tmp, safe=False)
 

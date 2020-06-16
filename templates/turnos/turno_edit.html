@@ -66,13 +66,56 @@
 
         $(document).ready(function () {
             $('#id_paciente').select2();
-            $('#id_profesional').select2();
-            $('#id_obrasocial').select2();
+        });
+
+        $('#id_paciente').on('select2:select', function (e) {
+            var parametro = $(this).val();
+            CargarObraSocial(parametro);
+            CargarProfesionalTratante(parametro);
         });
 
         function IrListadoTurno() {
             window.location.replace("/turnolistado");
         }
+
+        function CargarObraSocial(parametro){
+            $("id_obrasocial").empty();
+            $.getJSON("/ajax-obrasocialpaciente/" + parametro,
+                function (data, textStatus, jqXHR) {
+                    $.each(data, function (indexInArray, valueOfElement) { 
+                        $("#id_obrasocial").append($("<option />").val(valueOfElement["id_obrasocial"]).text(valueOfElement["descripcion_obrasocial"]));
+                    });
+                }
+            );
+        }
+
+        function CargarProfesionalTratante(parametro){
+            $("id_profesional").empty();
+            $.getJSON("/ajax-profesionaltratantepaciente/" + parametro,
+                function (data, textStatus, jqXHR) {
+                    $.each(data, function (indexInArray, valueOfElement) { 
+                        $("#id_profesional").append($("<option />").val(valueOfElement["id_profesional"]).text(valueOfElement["profesional"]));
+                    });
+                }
+            );
+        }
+
+
+        /*
+        $.getJSON("/Admin/GetFolderList/", function(result) {
+        for (var i = 0; i < result.length; i++) {
+            options += '<option value="' + result[i].ImageFolderID + '">' + result[i].Name + '</option>';
+            }
+        });
+
+
+        var $dropdown = $("#dropdown");
+        $.each(result, function() {
+            $dropdown.append($("<option />").val(this.ImageFolderID).text(this.Name));
+        });
+
+        */
+
     </script>
 
 {% endblock %}
