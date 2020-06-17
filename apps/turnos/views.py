@@ -1,4 +1,6 @@
 
+from datetime import datetime
+
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
@@ -13,7 +15,7 @@ from apps.turnos.models import Turno
 def listadoturno(request):
 
     profesionales = Profesional.objects.all().order_by('usuario__last_name')
-
+    
     if request.user.is_authenticated:
         usuario = User.objects.get(username=str(request.user.username))
         if not usuario.is_staff:
@@ -32,7 +34,7 @@ def listadoturno(request):
         if usuario.is_staff:
             consulta = Turno.objects.all().order_by('fechahora')
         else:
-            consulta = Turno.objects.filter(profesional=usuarioprofesional)
+            consulta = Turno.objects.filter(fechahora__gte=datetime.today(), profesional=usuarioprofesional)
 
     paginador = Paginator(consulta, 20)
     if "page" in request.GET:

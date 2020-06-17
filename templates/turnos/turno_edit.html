@@ -82,8 +82,10 @@
             $("id_obrasocial").empty();
             $.getJSON("/ajax-obrasocialpaciente/" + parametro,
                 function (data, textStatus, jqXHR) {
+                    console.log(data);
                     $.each(data, function (indexInArray, valueOfElement) { 
                         $("#id_obrasocial").append($("<option />").val(valueOfElement["id_obrasocial"]).text(valueOfElement["descripcion_obrasocial"]));
+                        //$("#id_obrasocial").append(new Option(valueOfElement["descripcion_obrasocial"], valueOfElement["id_obrasocial"], true, true));
                     });
                 }
             );
@@ -99,22 +101,6 @@
                 }
             );
         }
-
-
-        /*
-        $.getJSON("/Admin/GetFolderList/", function(result) {
-        for (var i = 0; i < result.length; i++) {
-            options += '<option value="' + result[i].ImageFolderID + '">' + result[i].Name + '</option>';
-            }
-        });
-
-
-        var $dropdown = $("#dropdown");
-        $.each(result, function() {
-            $dropdown.append($("<option />").val(this.ImageFolderID).text(this.Name));
-        });
-
-        */
 
     </script>
 

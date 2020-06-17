@@ -165,8 +165,9 @@ def ajax_obrasocial_paciente(request, pk):
     if pacientes_obrasociales:
         for dato in pacientes_obrasociales:
             dict_tmp["id_obrasocial"] = dato.obrasocial.pk
-            dict_tmp["descripcion_obrasocial"] = dato.obrasocial.descripcion
+            dict_tmp["descripcion_obrasocial"] = dato.obrasocial.descripcion.upper()
             list_tmp.append(dict_tmp)
+            dict_tmp = dict()
     else:
         pacientes_obrasociales = None
 
@@ -183,7 +184,7 @@ def ajax_profesionaltratante_paciente(request, pk):
 
     if paciente:
         dict_tmp["id_profesional"] = profesional.pk
-        dict_tmp["profesional"] = nombre_profesional
+        dict_tmp["profesional"] = nombre_profesional.upper()
         list_tmp.append(dict_tmp)
     else:
         paciente = None
