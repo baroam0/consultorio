@@ -62,7 +62,6 @@ def listadoturno(request):
         )
 
 
-
 def nuevoturno(request):
     if request.POST:
         form = TurnoForm(request.POST)
@@ -77,7 +76,6 @@ def nuevoturno(request):
             consulta = Turno.objects.get(fechahora=fechahora, paciente=paciente, profesional=profesional)
         except:
             consulta = None
-
 
         if not consulta:
             if form.is_valid():
@@ -107,6 +105,59 @@ def nuevoturno(request):
             )
     else:
         form = TurnoForm()
+        return render(
+            request,
+            'turnos/turno_edit.html',
+            {
+                "form": form,
+            }
+        )
+
+
+def editarturno(request, pk):
+    turno = Turno.objects.get(pk=pk)
+
+    if request.POST:
+        fechahora = request.POST["fechahora"]
+        fechahora = datetime.strptime(fechahora, "%d/%m/%Y %H:%M")
+        paciente = request.POST["paciente"]
+        profesional = request.POST["profesional"]
+
+        try:
+            consulta = Turno.objects.get(fechahora=fechahora, paciente=paciente, profesional=profesional)
+        except:
+            consulta = None
+        
+
+        if not consulta:
+            form = TurnoForm(request.POST, instance=consulta)
+            if form.is_valid():
+                form.save()
+                messages.success(
+                    request,
+                    "SE HAN GUARDADO EL TURNO ")
+                return redirect('/turnolistado/')
+            else:
+                return render(
+                    request,
+                    'turnos/turno_edit.html',
+                    {
+                        "form": form,
+                    })
+        else:
+            messages.error(
+                request,
+                "YA EXISTE UN TURNO EN ESE HORARIO PARA ESE PACIENTE Y ESE PROFESIONAL"
+            )
+            return render(
+                request,
+                'turnos/turno_edit.html',
+                {
+                    "form": form,
+                }
+            )
+    else:
+        form = TurnoForm(instance=consulta)
         return render(
             request,
             'turnos/turno_edit.html',

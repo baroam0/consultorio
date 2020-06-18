@@ -130,27 +130,6 @@ def editarpaciente(request, pk):
                 }
             )
 
-"""
-def ajaxpacienteobrasocialnuevo(request):
-    parametro = request.GET.get('term')
-
-    consulta = ObraSocial.objects.filter(
-        Q(descripcion__icontains=parametro) |
-        Q(abreviatura__icontains=parametro)
-    )
-
-    dict_tmp = dict()
-    list_tmp = list()
-
-    if len(consulta) > 0:
-        for i in consulta:
-            dict_tmp["id"] = i.pk
-            dict_tmp["text"] = i.descripcion.upper()
-            list_tmp.append(dict_tmp)
-            dict_tmp = dict()
-
-    return JsonResponse(list_tmp, safe=False)
-"""
 
 def ajax_obrasocial_paciente(request, pk):
     paciente  = Paciente.objects.get(pk=pk)
