@@ -33,7 +33,7 @@ class TurnoForm(forms.ModelForm):
     obrasocial = forms.ModelChoiceField(
         queryset=ObraSocial.objects.all(), 
         label="Obra Social",
-        required=False,
+        required=True,
         widget=forms.Select(
             attrs={
                 'class': 'form-control'
@@ -44,7 +44,7 @@ class TurnoForm(forms.ModelForm):
     profesional = forms.ModelChoiceField(
         queryset=Profesional.objects.all(), 
         label="Profesional",
-        required=False,
+        required=True,
         widget=forms.Select(
             attrs={
                 'class': 'form-control'
