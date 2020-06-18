@@ -33,12 +33,13 @@
                 </div>
                 <div class="col-7">
 
-                        
-                    <select class="form-control" id="id_select_profesional" name="select_profesional">
-                        {% for profesional in profesionales %}
-                            <option value={{profesional.pk}}>{{profesional}}</option>
-                        {% endfor%}
-                    </select>
+                    {%if profesionales %}
+                        <select class="form-control" id="id_select_profesional" name="select_profesional">
+                            {% for profesional in profesionales %}
+                                <option value={{profesional.pk}}>{{profesional}}</option>
+                            {% endfor%}
+                        </select>
+                    {% endif %}
                     
 
                     <input class="form-control" id="txtBuscar"  name="txtBuscar" placeholder="Buscar....">

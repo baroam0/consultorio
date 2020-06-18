@@ -32,9 +32,9 @@ def listadoturno(request):
             consulta = Turno.objects.filter(profesional=usuarioprofesional)
     else:
         if usuario.is_staff:
-            consulta = Turno.objects.all().order_by('fechahora')
+            consulta = Turno.objects.all()
         else:
-            consulta = Turno.objects.filter(fechahora__gte=datetime.today(), profesional=usuarioprofesional)
+            consulta = Turno.objects.filter(profesional=usuarioprofesional)
 
     paginador = Paginator(consulta, 20)
     if "page" in request.GET:
@@ -42,33 +42,69 @@ def listadoturno(request):
     else:
         page = 1
     resultados = paginador.get_page(page)
-    return render(
-        request,
-        'turnos/turno_list.html',
-        {
-            'resultados': resultados,
-            'profesionales': profesionales
-        }
-    )
+
+    if usuario.is_staff:
+        return render(
+            request,
+            'turnos/turno_list.html',
+            {
+                'resultados': resultados,
+                'profesionales': profesionales
+            }
+        )
+    else:
+        return render(
+            request,
+            'turnos/turno_list.html',
+            {
+                'resultados': resultados,
+            }
+        )
+
 
 
 def nuevoturno(request):
     if request.POST:
         form = TurnoForm(request.POST)
 
-        if form.is_valid():
-            form.save()
-            messages.success(
-                request,
-                "SE HAN GUARDADO EL TURNO ")
-            return redirect('/turnolistado/')
+        fechahora = request.POST["fechahora"]
+        paciente = request.POST["paciente"]
+        profesional = request.POST["profesional"]
+
+        fechahora = datetime.strptime(fechahora, "%d/%m/%Y %H:%M")        
+
+        try:
+            consulta = Turno.objects.get(fechahora=fechahora, paciente=paciente, profesional=profesional)
+        except:
+            consulta = None
+
+
+        if not consulta:
+            if form.is_valid():
+                form.save()
+                messages.success(
+                    request,
+                    "SE HAN GUARDADO EL TURNO ")
+                return redirect('/turnolistado/')
+            else:
+                return render(
+                    request,
+                    'turnos/turno_edit.html',
+                    {
+                        "form": form,
+                    })
         else:
+            messages.error(
+                request,
+                "YA EXISTE UN TURNO EN ESE HORARIO PARA ESE PACIENTE Y ESE PROFESIONAL"
+            )
             return render(
                 request,
                 'turnos/turno_edit.html',
                 {
                     "form": form,
-                })
+                }
+            )
     else:
         form = TurnoForm()
         return render(

@@ -28,7 +28,7 @@
         <div class="row">            
             <div class="col-12">
                 <hr>
-                <form method="POST">{% csrf_token %}
+                <form method="POST" id="frmdatos">{% csrf_token %}
                     
                     {{ form.as_p }}
 
@@ -68,6 +68,7 @@
             $('#id_paciente').select2();
         });
 
+        
         $('#id_paciente').on('select2:select', function (e) {
             var parametro = $(this).val();
             CargarObraSocial(parametro);
@@ -79,20 +80,20 @@
         }
 
         function CargarObraSocial(parametro){
-            $("id_obrasocial").empty();
+            $("#id_obrasocial").empty();
             $.getJSON("/ajax-obrasocialpaciente/" + parametro,
                 function (data, textStatus, jqXHR) {
-                    console.log(data);
                     $.each(data, function (indexInArray, valueOfElement) { 
-                        $("#id_obrasocial").append($("<option />").val(valueOfElement["id_obrasocial"]).text(valueOfElement["descripcion_obrasocial"]));
-                        //$("#id_obrasocial").append(new Option(valueOfElement["descripcion_obrasocial"], valueOfElement["id_obrasocial"], true, true));
+                        var elemento = '<option value="' + valueOfElement["id_obrasocial"] + '">' + valueOfElement["descripcion_obrasocial"] + '</option>'                       
+                        $('#id_obrasocial').append(elemento);
                     });
                 }
             );
+            
         }
 
         function CargarProfesionalTratante(parametro){
-            $("id_profesional").empty();
+            $("#id_profesional").empty();
             $.getJSON("/ajax-profesionaltratantepaciente/" + parametro,
                 function (data, textStatus, jqXHR) {
                     $.each(data, function (indexInArray, valueOfElement) { 
@@ -100,6 +101,7 @@
                     });
                 }
             );
+            
         }
 
     </script>
