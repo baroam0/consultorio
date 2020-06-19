@@ -5,6 +5,8 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.db.models import Q
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 
 from apps.profesionales.models import Profesional
@@ -13,9 +15,6 @@ from apps.turnos.models import Turno
 
 
 def listadoturno(request):
-
-    profesionales = Profesional.objects.all().order_by('usuario__last_name')
-    
     if request.user.is_authenticated:
         usuario = User.objects.get(username=str(request.user.username))
         if not usuario.is_staff:
@@ -23,22 +22,99 @@ def listadoturno(request):
 
     if "txtBuscar" in request.GET:
         parametro = request.GET.get("txtBuscar")
+
+        if parametro == "" or None:
+            if usuario.is_staff:
+                consulta = Turno.objects.filter(
+                    fechahora__date=datetime.today(),
+                    asistio=False
+                ).order_by('fechahora')
+            
+                paginador = Paginator(consulta, 20)
+                page = 1
+                resultados = paginador.get_page(page)
+
+                return render(
+                    request,
+                    'turnos/turno_list.html',
+                    {
+                        'resultados': resultados,
+                        'profesionales': profesionales
+                    }
+                )
+
+        if "/" in parametro:
+            parametro = datetime.strptime(parametro, "%d/%m/%Y")
+
+            if usuario.is_staff:
+                consulta = Turno.objects.filter(
+                    fechahora__year=parametro.year,
+                    fechahora__month=parametro.month,
+                    fechahora__day=parametro.day,
+                    asistio=False,
+                )
+            else:
+                consulta = Turno.objects.filter(
+                    fechahora__year=parametro.year,
+                    fechahora__month=parametro.month,
+                    fechahora__day=parametro.day,
+                    profesional=usuarioprofesional,
+                    asistio=False
+                )
+            return render(
+                request,
+                'turnos/turno_list.html',
+                {
+                    'resultados': consulta,
+                }
+            )
+
+        if "-" in parametro:
+            parametro = datetime.strptime(parametro, "%d-%m-%Y")
+            if usuario.is_staff:
+                consulta = Turno.objects.filter(
+                    fechahora__year=parametro.year,
+                    fechahora__month=parametro.month,
+                    fechahora__day=parametro.day,
+                    asistio=False,
+                )
+            else:
+                consulta = Turno.objects.filter(
+                    fechahora__year=parametro.year,
+                    fechahora__month=parametro.month,
+                    fechahora__day=parametro.day,
+                    profesional=usuarioprofesional,
+                    asistio=False
+                )
+            
+            return render(
+                request,
+                'turnos/turno_list.html',
+                {
+                    'resultados': consulta,
+                }
+            )
+
         if usuario.is_staff:
             consulta = Turno.objects.filter(
                 Q(paciente__nombre__icontains=parametro) |
                 Q(paciente__apellido__icontains=parametro)
             ).order_by('fechahora')
         else:
-            consulta = Turno.objects.filter(profesional=usuarioprofesional)
+            consulta = Turno.objects.filter(
+                profesional=usuarioprofesional,
+                asistio=False)
     else:
         if usuario.is_staff:
             consulta = Turno.objects.filter(
-                fechahora__date=datetime.now()
+                fechahora__date=datetime.today(),
+                asistio=False,
             ).order_by('fechahora')
         else:
             consulta = Turno.objects.filter(
                 fechahora__date=datetime.today(),
-                profesional=usuarioprofesional
+                profesional=usuarioprofesional,
+                asistio=False
             ).order_by('fechahora')
 
     paginador = Paginator(consulta, 20)
@@ -48,24 +124,15 @@ def listadoturno(request):
         page = 1
     resultados = paginador.get_page(page)
 
-    if usuario.is_staff:
-        return render(
-            request,
-            'turnos/turno_list.html',
-            {
-                'resultados': resultados,
-                'profesionales': profesionales
-            }
-        )
-    else:
-        return render(
-            request,
-            'turnos/turno_list.html',
-            {
-                'resultados': resultados,
-            }
-        )
-
+    
+    return render(
+        request,
+        'turnos/turno_list.html',
+        {
+            'resultados': resultados,
+        }
+    )
+    
 
 def nuevoturno(request):
     if request.POST:
@@ -75,7 +142,7 @@ def nuevoturno(request):
         paciente = request.POST["paciente"]
         profesional = request.POST["profesional"]
 
-        fechahora = datetime.strptime(fechahora, "%d/%m/%Y %H:%M")        
+        fechahora = datetime.strptime(fechahora, "%d/%m/%Y %H:%M")
 
         try:
             consulta = Turno.objects.get(fechahora=fechahora, paciente=paciente, profesional=profesional)
@@ -165,7 +232,7 @@ def editarturno(request, pk):
                 }
             )
     else:
-        form = TurnoForm(instance=consulta)
+        form = TurnoForm(instance=turno)
         return render(
             request,
             'turnos/turno_edit.html',
@@ -173,6 +240,27 @@ def editarturno(request, pk):
                 "form": form,
             }
         )
+
+
+def ajax_asistiopaciente(request):
+    parametro = request.GET.get("parametro")
+    consulta = Turno.objects.get(pk=parametro)
+    consulta.asistio = True
+    consulta.save()
+    dicc_tmp = dict()
+    dicc_tmp["response"] = 200
+    return JsonResponse(dicc_tmp, safe=False)
+
+
+def ajax_turnoborrar(request):
+    parametro = request.GET.get("parametro")
+    consulta = Turno.objects.get(pk=parametro)
+    consulta.delete()
+    dicc_tmp = dict()
+    dicc_tmp["response"] = 200
+    return JsonResponse(dicc_tmp, safe=False)
+
+
 
 
 # Create your views here.
