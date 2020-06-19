@@ -19,7 +19,7 @@ def listadodatosbancarios(request):
     if usuario.is_staff:
         consulta = DatosBancarios.objects.all()
     else:
-        consulta = DatosBancarios.objects.filter(usuario=usuario)
+        consulta = DatosBancarios.objects.filter(titular=usuario)
 
     paginador = Paginator(consulta, 20)
 

@@ -138,10 +138,14 @@ def nuevoturno(request):
         form = TurnoForm(request.POST)
 
         fechahora = request.POST["fechahora"]
+
+        if len(fechahora) > 17:
+            fechahora = datetime.strptime(fechahora, "%d/%m/%Y %H:%M:%S")
+        else:
+            fechahora = datetime.strptime(fechahora, "%d/%m/%Y %H:%M")
+
         paciente = request.POST["paciente"]
         profesional = request.POST["profesional"]
-
-        fechahora = datetime.strptime(fechahora, "%d/%m/%Y %H:%M")
 
         try:
             consulta = Turno.objects.get(fechahora=fechahora, paciente=paciente, profesional=profesional)
