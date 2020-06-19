@@ -27,14 +27,19 @@ def listadoturno(request):
             consulta = Turno.objects.filter(
                 Q(paciente__nombre__icontains=parametro) |
                 Q(paciente__apellido__icontains=parametro)
-            )
+            ).order_by('fechahora')
         else:
             consulta = Turno.objects.filter(profesional=usuarioprofesional)
     else:
         if usuario.is_staff:
-            consulta = Turno.objects.all()
+            consulta = Turno.objects.filter(
+                fechahora__date=datetime.now()
+            ).order_by('fechahora')
         else:
-            consulta = Turno.objects.filter(profesional=usuarioprofesional)
+            consulta = Turno.objects.filter(
+                fechahora__date=datetime.today(),
+                profesional=usuarioprofesional
+            ).order_by('fechahora')
 
     paginador = Paginator(consulta, 20)
     if "page" in request.GET:
@@ -124,10 +129,13 @@ def editarturno(request, pk):
         profesional = request.POST["profesional"]
 
         try:
-            consulta = Turno.objects.get(fechahora=fechahora, paciente=paciente, profesional=profesional)
+            consulta = Turno.objects.get(
+                fechahora=fechahora,
+                paciente=paciente,
+                profesional=profesional
+            )
         except:
             consulta = None
-        
 
         if not consulta:
             form = TurnoForm(request.POST, instance=consulta)

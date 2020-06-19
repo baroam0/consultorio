@@ -77,21 +77,23 @@
                         <td>{{resultado.paciente}}</td>
                         <td>{{resultado.profesional}}</td>
                         <td>{{resultado.fechahora}}</td>
+
                         <td>
                             <button type="button" class="btn btn-link btn-sm" onclick="location.href='/turnoeditar/' + {{ resultado.pk }}">
-                                <i data-feather="edit-2"></i>
+                                <i class="fas fa-pencil-alt"></i>
                             </button>
                         </td>
 
+
                         <td>
                             <button type="button" class="btn btn-link btn-sm" onclick="ConfirmaBorrarTurno({{resultado.pk}})">
-                                <i data-feather="trash"></i>
+                                <i class="fas fa-trash"></i>
                             </button>
                         </td>
 
                         <td>
                             <button type="button" class="btn btn-link btn-sm" onclick="ConfirmaAsistenciaTurno({{ resultado.pk }})">
-                                <i data-feather="check-circle"></i>
+                                <i class="fas fa-check-circle"></i>
                             </button>
                         </td>
 
