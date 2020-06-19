@@ -39,7 +39,6 @@ def listadoturno(request):
                     'turnos/turno_list.html',
                     {
                         'resultados': resultados,
-                        'profesionales': profesionales
                     }
                 )
 

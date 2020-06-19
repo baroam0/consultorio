@@ -107,6 +107,7 @@ def crearprofesional(request):
    
 def editarprofesional(request, pk):
     consulta = Profesional.objects.get(pk=pk)
+    usuario = User.objects.get(pk=consulta.usuario.pk)
     if request.POST:
         form = ProfesionalForm(request.POST, instance=consulta)
         if form.is_valid:
@@ -114,11 +115,15 @@ def editarprofesional(request, pk):
             messages.success(request, "SE HAN ACTUALIZADO EL PROFESIONAL")
             return redirect('/profesionallistado')
     else:
+        form_usuario = UsuarioForm(instance=usuario)
         form = ProfesionalForm(instance=consulta)
         return render(
             request,
             'profesionales/profesional_edit.html',
-            {"form": form}
+            {
+                "form_usuario": form_usuario,
+                "form": form
+            }
         )
 
 
