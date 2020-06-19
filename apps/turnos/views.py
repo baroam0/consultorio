@@ -190,7 +190,11 @@ def editarturno(request, pk):
 
     if request.POST:
         fechahora = request.POST["fechahora"]
-        fechahora = datetime.strptime(fechahora, "%d/%m/%Y %H:%M")
+
+        if len(fechahora) > 17:
+            fechahora = datetime.strptime(fechahora, "%d/%m/%Y %H:%M:%S")
+        else:
+            fechahora = datetime.strptime(fechahora, "%d/%m/%Y %H:%M")
         paciente = request.POST["paciente"]
         profesional = request.POST["profesional"]
 
@@ -204,7 +208,7 @@ def editarturno(request, pk):
             consulta = None
 
         if not consulta:
-            form = TurnoForm(request.POST, instance=consulta)
+            form = TurnoForm(request.POST, instance=turno)
             if form.is_valid():
                 form.save()
                 messages.success(
@@ -219,6 +223,7 @@ def editarturno(request, pk):
                         "form": form,
                     })
         else:
+            form = TurnoForm(instance=turno)
             messages.error(
                 request,
                 "YA EXISTE UN TURNO EN ESE HORARIO PARA ESE PACIENTE Y ESE PROFESIONAL"
