@@ -38,7 +38,7 @@ class PacienteForm(forms.ModelForm):
     fue_al_psicologo = forms.CharField(label="Fue al Psicologo", required=False)
     grupo_familiar = forms.CharField(label="Grupo Familiar", required=False)
     diagnostico =  forms.ModelChoiceField(
-        queryset=Catalogo.objects.none(),
+        queryset=Catalogo.objects.filter(clave__icontains="F"),
         label = 'Diagnostico',
         required=False,
     )
