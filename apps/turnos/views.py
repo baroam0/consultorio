@@ -148,7 +148,7 @@ def nuevoturno(request):
         profesional = request.POST["profesional"]
 
         try:
-            consulta = Turno.objects.get(fechahora=fechahora, paciente=paciente, profesional=profesional)
+            consulta = Turno.objects.get(fechahora=fechahora, profesional=profesional)
         except:
             consulta = None
 
@@ -205,7 +205,6 @@ def editarturno(request, pk):
         try:
             consulta = Turno.objects.get(
                 fechahora=fechahora,
-                paciente=paciente,
                 profesional=profesional
             )
         except:
