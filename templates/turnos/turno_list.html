@@ -33,6 +33,16 @@
                 </div>
                 <div class="col-7">
 
+                    {% if profesionales %}
+                        <select id="select_profesional_busqueda" name="select_profesional_busqueda" class="form-control">
+                            {% for profesional in profesionales %}
+                                <option value={{profesional.pk}}>
+                                    {{profesional}}
+                                </option>
+                            {% endfor%}
+                        </select>
+                    {% endif %}
+
                     <input class="form-control" id="txtBuscar"  name="txtBuscar" placeholder="Buscar....">
                     <button type="submit" class="btn btn-default" title="Buscar!">
                         <i class="fas fa-search"></i>

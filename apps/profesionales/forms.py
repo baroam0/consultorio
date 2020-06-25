@@ -18,8 +18,11 @@ class UsuarioNombreApellido(forms.ModelForm):
             })
 
     class Meta:
-        model = Profesional
-        fields = ['first_name', 'last_name']
+        model = User
+        fields = [
+            'first_name', 
+            'last_name', 
+            ]
 
     
 class ProfesionalForm(forms.ModelForm):
