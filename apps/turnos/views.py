@@ -118,18 +118,44 @@ def listadoturno(request):
             )
 
         if usuario.is_staff:
-            consulta = Turno.objects.filter(
-                paciente__nombre__icontains=parametro, 
+
+            q = Turno.objects.filter(
+                profesional = profesional,
+                asistio = False
+            )
+
+            consulta_apellido = q.filter(
                 paciente__apellido__icontains=parametro,
-                profesional=profesional,
-                asistio=False
             ).order_by('fechahora')
-        else:
-            consulta = Turno.objects.filter(
+
+            consulta_nombre = q.filter(
                 paciente__nombre__icontains=parametro,
-                paciente__apellido__icontains=parametro,
+            ).order_by('fechahora')
+
+            consulta_dni = q.filter(
+                paciente__numero_documento=parametro,
+            ).order_by('fechahora')
+
+            consulta = consulta_apellido | consulta_nombre | consulta_dni
+
+        else:
+            q = Turno.objects.filter(
                 profesional=usuarioprofesional,
                 asistio=False)
+
+            consulta_apellido = q.filter(
+                paciente__apellido__icontains=parametro,
+            )
+
+            consulta_nombre = q.filter(
+                paciente__nombre__icontains=parametro,
+            )
+
+            consulta_dni = q.filter(
+                paciente__numero_documento=parametro,
+            ).order_by('fechahora')
+
+            consulta = consulta_apellido | consulta_nombre | consulta_dni
     else:
         if usuario.is_staff:
             consulta = Turno.objects.filter(
