@@ -32,6 +32,7 @@ def listadoturno(request):
             if usuario.is_staff:
                 consulta = Turno.objects.filter(
                     fechahora__date=datetime.today(),
+                    profesional=profesional,
                     asistio=False
                 ).order_by('fechahora')
             
