@@ -31,19 +31,19 @@ def listadopaciente(request):
             consulta = Paciente.objects.filter(
                 Q(apellido__icontains=parametro) |
                 Q(nombre__contains=parametro)
-            )
+            ).order_by('apellido')
         else:
             consulta = Paciente.objects.filter(
                 Q(apellido__icontains=parametro) |
                 Q(nombre__contains=parametro)
-            ).filter(profesional_tratante=usuarioprofesional)
+            ).filter(profesional_tratante=usuarioprofesional).order_by('apellido')
             #consulta = consulta.filter(profesional_tratante=usuarioprofesional)
             
     else:
         if usuario.is_staff:
-            consulta = Paciente.objects.all()
+            consulta = Paciente.objects.all().order_by('apellido')
         else:
-            consulta = Paciente.objects.filter(profesional_tratante=usuarioprofesional)
+            consulta = Paciente.objects.filter(profesional_tratante=usuarioprofesional).order_by('apellido')
 
     paginador = Paginator(consulta, 20)
     if "page" in request.GET:

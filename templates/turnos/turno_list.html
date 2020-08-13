@@ -63,9 +63,9 @@
             <table class="table table-hover">
                 <thead>
                     <tr>
-                        <th>Paciente</th>
-                        <th>Profesional</th>
                         <th>Fecha/Hora</th>
+                        <th>Profesional</th>
+                        <th>Paciente</th>
                         <th>Editar</th>
                         <th>Borrar</th>
                         <th>Asistio</th>
@@ -75,9 +75,9 @@
                 <tbody>
                     {% for resultado in resultados %}
                     <tr>
-                        <td>{{resultado.paciente}}</td>
-                        <td>{{resultado.profesional}}</td>
                         <td>{{resultado.fechahora}}</td>
+                        <td>{{resultado.profesional}}</td>
+                        <td>{{resultado.paciente}}</td>
 
                         <td>
                             <button type="button" class="btn btn-link btn-sm" onclick="location.href='/turnoeditar/' + {{ resultado.pk }}">
