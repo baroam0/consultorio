@@ -159,7 +159,21 @@
                         <div class="modal-body">
 
                             <form id="form-pacienteobrasocial">
-                                {{form_obrasocial.as_p}}
+                                <p>
+                                    <label for="id_obrasocial">Obra Social:</label>
+                                    {{form_obrasocial.obrasocial}}
+                                </p>
+
+                                <p>
+                                    <label for="id_numeroafiliado">Numero Afiliado:</label>
+                                    {{form_obrasocial.numeroafiliado}}
+                                </p>
+
+                                <p>
+                                    <label for="id_observaciones">Observaciones:</label>
+                                    {{form_obrasocial.observaciones}}
+                                </p>
+
                             </form>
 
                             <table class="table table-hover" id="tabla-pacienteobrasocial">
@@ -240,6 +254,8 @@
            
             $('#id_profesional_tratante').select2();
 
+            $('#id_obrasocial').select2();
+
             $('#id_diagnostico').select2({
                 language: {
                     inputTooShort: function() {
@@ -263,33 +279,7 @@
                         };
                     }
                 }
-            });
-
-
-            $('#modal-select-obra-social').select2({
-                language: {
-                    inputTooShort: function() {
-                        return 'Por favor ingrese 2 caracteres';
-                    },
-                    noResults: function() {
-                        return "No se encontraron resultados";
-                    },
-                },
-                minimumInputLength: 2,
-                ajax: {
-                    url: '/ajaxobrasocial/',
-                    processResults: function (data) {
-                        return {
-                            results: $.map(data, function (item) {
-                                return {
-                                    text: item.text,
-                                    id: item.id
-                                }
-                            })
-                        };
-                    }
-                }
-            });
+            });  
 
         });
 

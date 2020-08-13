@@ -19,14 +19,20 @@ def listadoturno(request):
         usuario = User.objects.get(username=str(request.user.username))
         if not usuario.is_staff:
             usuarioprofesional = Profesional.objects.get(usuario=usuario)
+        else:
+            profesionales = Profesional.objects.all()
 
     if "txtBuscar" in request.GET:
         parametro = request.GET.get("txtBuscar")
+
+        if "select_profesional_busqueda" in request.GET:
+            profesional = Profesional.objects.get(pk=request.GET.get("select_profesional_busqueda"))
 
         if parametro == "" or None:
             if usuario.is_staff:
                 consulta = Turno.objects.filter(
                     fechahora__date=datetime.today(),
+                    profesional=profesional,
                     asistio=False
                 ).order_by('fechahora')
             
@@ -34,6 +40,24 @@ def listadoturno(request):
                 page = 1
                 resultados = paginador.get_page(page)
 
+                return render(
+                    request,
+                    'turnos/turno_list.html',
+                    {
+                        'resultados': resultados,
+                        'profesionales': profesionales
+                    }
+                )
+            else:
+                consulta = Turno.objects.filter(
+                    fechahora__date=datetime.today(),
+                    profesional=usuarioprofesional,
+                    asistio=False
+                ).order_by('fechahora')
+            
+                paginador = Paginator(consulta, 20)
+                page = 1
+                resultados = paginador.get_page(page)
                 return render(
                     request,
                     'turnos/turno_list.html',
@@ -95,14 +119,44 @@ def listadoturno(request):
             )
 
         if usuario.is_staff:
-            consulta = Turno.objects.filter(
-                Q(paciente__nombre__icontains=parametro) |
-                Q(paciente__apellido__icontains=parametro)
+
+            q = Turno.objects.filter(
+                profesional = profesional,
+                asistio = False
+            )
+
+            consulta_apellido = q.filter(
+                paciente__apellido__icontains=parametro,
             ).order_by('fechahora')
+
+            consulta_nombre = q.filter(
+                paciente__nombre__icontains=parametro,
+            ).order_by('fechahora')
+
+            consulta_dni = q.filter(
+                paciente__numero_documento=parametro,
+            ).order_by('fechahora')
+
+            consulta = consulta_apellido | consulta_nombre | consulta_dni
+
         else:
-            consulta = Turno.objects.filter(
+            q = Turno.objects.filter(
                 profesional=usuarioprofesional,
                 asistio=False)
+
+            consulta_apellido = q.filter(
+                paciente__apellido__icontains=parametro,
+            )
+
+            consulta_nombre = q.filter(
+                paciente__nombre__icontains=parametro,
+            )
+
+            consulta_dni = q.filter(
+                paciente__numero_documento=parametro,
+            ).order_by('fechahora')
+
+            consulta = consulta_apellido | consulta_nombre | consulta_dni
     else:
         if usuario.is_staff:
             consulta = Turno.objects.filter(
@@ -123,14 +177,23 @@ def listadoturno(request):
         page = 1
     resultados = paginador.get_page(page)
 
-    
-    return render(
-        request,
-        'turnos/turno_list.html',
-        {
-            'resultados': resultados,
-        }
-    )
+    if usuario.is_staff:
+        return render(
+            request,
+            'turnos/turno_list.html',
+            {
+                'resultados': resultados,
+                'profesionales': profesionales,
+            }
+        )
+    else:
+        return render(
+            request,
+            'turnos/turno_list.html',
+            {
+                'resultados': resultados,
+            }
+        )
     
 
 def nuevoturno(request):

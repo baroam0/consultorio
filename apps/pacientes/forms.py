@@ -85,7 +85,8 @@ class PacienteObraSocialForm(forms.ModelForm):
         super(PacienteObraSocialForm, self).__init__(*args, **kwargs)
         for field in iter(self.fields):
             self.fields[field].widget.attrs.update({
-                'class': 'form-control'
+                'class': 'form-control',
+                'style': 'width:100%'
             })
 
     class Meta:
