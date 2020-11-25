@@ -1,4 +1,5 @@
 
+.vscode/settings.json
 /consultorio/settings.py
 db.sqlite3
 *.pyc 
