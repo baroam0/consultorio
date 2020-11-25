@@ -15,186 +15,40 @@ from apps.turnos.models import Turno
 
 
 def listadoturno(request):
+    """
     if request.user.is_authenticated:
         usuario = User.objects.get(username=str(request.user.username))
         if not usuario.is_staff:
             usuarioprofesional = Profesional.objects.get(usuario=usuario)
         else:
             profesionales = Profesional.objects.all()
+    """
+    profesionales = Profesional.objects.all()
 
-    if "txtBuscar" in request.GET:
-        parametro = request.GET.get("txtBuscar")
-
-        if "select_profesional_busqueda" in request.GET:
-            profesional = Profesional.objects.get(pk=request.GET.get("select_profesional_busqueda"))
-
-        if parametro == "" or None:
-            if usuario.is_staff:
-                consulta = Turno.objects.filter(
-                    fechahora__date=datetime.today(),
-                    profesional=profesional,
-                    asistio=False
-                ).order_by('fechahora')
-            
-                paginador = Paginator(consulta, 20)
-                page = 1
-                resultados = paginador.get_page(page)
-
-                return render(
-                    request,
-                    'turnos/turno_list.html',
-                    {
-                        'resultados': resultados,
-                        'profesionales': profesionales
-                    }
-                )
-            else:
-                consulta = Turno.objects.filter(
-                    fechahora__date=datetime.today(),
-                    profesional=usuarioprofesional,
-                    asistio=False
-                ).order_by('fechahora')
-            
-                paginador = Paginator(consulta, 20)
-                page = 1
-                resultados = paginador.get_page(page)
-                return render(
-                    request,
-                    'turnos/turno_list.html',
-                    {
-                        'resultados': resultados,
-                    }
-                )
-
-        if "/" in parametro:
-            parametro = datetime.strptime(parametro, "%d/%m/%Y")
-
-            if usuario.is_staff:
-                consulta = Turno.objects.filter(
-                    fechahora__year=parametro.year,
-                    fechahora__month=parametro.month,
-                    fechahora__day=parametro.day,
-                    asistio=False,
-                )
-            else:
-                consulta = Turno.objects.filter(
-                    fechahora__year=parametro.year,
-                    fechahora__month=parametro.month,
-                    fechahora__day=parametro.day,
-                    profesional=usuarioprofesional,
-                    asistio=False
-                )
-            return render(
-                request,
-                'turnos/turno_list.html',
-                {
-                    'resultados': consulta,
-                }
-            )
-
-        if "-" in parametro:
-            parametro = datetime.strptime(parametro, "%d-%m-%Y")
-            if usuario.is_staff:
-                consulta = Turno.objects.filter(
-                    fechahora__year=parametro.year,
-                    fechahora__month=parametro.month,
-                    fechahora__day=parametro.day,
-                    asistio=False,
-                )
-            else:
-                consulta = Turno.objects.filter(
-                    fechahora__year=parametro.year,
-                    fechahora__month=parametro.month,
-                    fechahora__day=parametro.day,
-                    profesional=usuarioprofesional,
-                    asistio=False
-                )
-            
-            return render(
-                request,
-                'turnos/turno_list.html',
-                {
-                    'resultados': consulta,
-                }
-            )
-
-        if usuario.is_staff:
-
-            q = Turno.objects.filter(
-                profesional = profesional,
-                asistio = False
-            )
-
-            consulta_apellido = q.filter(
-                paciente__apellido__icontains=parametro,
-            ).order_by('fechahora')
-
-            consulta_nombre = q.filter(
-                paciente__nombre__icontains=parametro,
-            ).order_by('fechahora')
-
-            consulta_dni = q.filter(
-                paciente__numero_documento=parametro,
-            ).order_by('fechahora')
-
-            consulta = consulta_apellido | consulta_nombre | consulta_dni
-
-        else:
-            q = Turno.objects.filter(
-                profesional=usuarioprofesional,
-                asistio=False)
-
-            consulta_apellido = q.filter(
-                paciente__apellido__icontains=parametro,
-            )
-
-            consulta_nombre = q.filter(
-                paciente__nombre__icontains=parametro,
-            )
-
-            consulta_dni = q.filter(
-                paciente__numero_documento=parametro,
-            ).order_by('fechahora')
-
-            consulta = consulta_apellido | consulta_nombre | consulta_dni
-    else:
-        if usuario.is_staff:
-            consulta = Turno.objects.filter(
-                fechahora__date=datetime.today(),
-                asistio=False,
-            ).order_by('fechahora')
-        else:
-            consulta = Turno.objects.filter(
-                fechahora__date=datetime.today(),
-                profesional=usuarioprofesional,
-                asistio=False
-            ).order_by('fechahora')
-
-    paginador = Paginator(consulta, 20)
-    if "page" in request.GET:
-        page = request.GET.get('page')
-    else:
-        page = 1
-    resultados = paginador.get_page(page)
-
-    if usuario.is_staff:
+    if "select_profesional_busqueda" in request.GET:
+        profesional = Profesional.objects.get(pk=request.GET.get("select_profesional_busqueda"))
+        resultados = Turno.objects.filter(profesional=profesional)
         return render(
             request,
             'turnos/turno_list.html',
             {
-                'resultados': resultados,
                 'profesionales': profesionales,
+                'resultados': resultados
             }
         )
     else:
+        resultados = Turno.objects.all()
         return render(
             request,
             'turnos/turno_list.html',
             {
-                'resultados': resultados,
+                'profesionales': profesionales,
+                'resultados': resultados
             }
         )
-    
+
+
+
 
 def nuevoturno(request):
     if request.POST:
