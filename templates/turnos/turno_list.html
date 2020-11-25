@@ -1,183 +1,98 @@
 
-
 {% extends 'base.html' %}
 
 {% block content %}
-
     <div class="container">
-
-        <br>
-        <div class="row">
-            <div class="col-sm-4"></div>
-            <div class="col-sm-4">
-                <h2>TURNOS</h2>
-            </div>
-            <div class="col-sm-4"></div>
-        </div>
-
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-success" role="alert">
-                    {{message}}
-                </div>
-            {% endfor %}
-        {% endif %}
-        
-        <hr>
 
         <form action="/turnolistado" method="GET">
             <div class="form-inline">
-                <div class="col-3">
+                <div class="col-4">
                 </div>
-                <div class="col-2">
+                <div class="col-4">
+                    <select class='form-control' id='select_profesional_busqueda' name='select_profesional_busqueda'>
+                        {% for profesional in profesionales %}
+                            <option value={{profesional.pk}}>
+                                {{profesional.usuario.last_name}}, {{profesional.usuario.first_name}}
+                            </option>
+                            
+                        {% endfor%}
+                    </select>
                 </div>
-                <div class="col-7">
-
-                    {% if profesionales %}
-                        <select id="select_profesional_busqueda" name="select_profesional_busqueda" class="form-control">
-                            {% for profesional in profesionales %}
-                                <option value={{profesional.pk}}>
-                                    {{profesional}}
-                                </option>
-                            {% endfor%}
-                        </select>
-                    {% endif %}
-
-                    <input class="form-control" id="txtBuscar"  name="txtBuscar" placeholder="Buscar....">
+                <div class="col-4">
+                    <!--input class="form-control" id="txtBuscar" name="txtBuscar" placeholder="Buscar...."-->
                     <button type="submit" class="btn btn-default" title="Buscar!">
                         <i class="fas fa-search"></i>
                     </button>
-
-                    <button type="button" class="btn btn-default" title="Nuevo Turno!" onclick="location.href='/turnonuevo'">
-                        <i class="fas fa-plus"></i>
-                    </button>
-
-                    <button type="button" class="btn btn-default" title="Nuevo Paciente!" onclick="location.href='/pacientenuevo'">
-                        <i class="fas fa-user"></i>
-                    </button>
                 </div>
             </div>
-        
-            <br>
-
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Paciente</th>
-                        <th>Profesional</th>
-                        <th>Fecha/Hora</th>
-                        <th>Editar</th>
-                        <th>Borrar</th>
-                        <th>Asistio</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {% for resultado in resultados %}
-                    <tr>
-                        <td>{{resultado.paciente}}</td>
-                        <td>{{resultado.profesional}}</td>
-                        <td>{{resultado.fechahora}}</td>
-
-                        <td>
-                            <button type="button" class="btn btn-link btn-sm" onclick="location.href='/turnoeditar/' + {{ resultado.pk }}">
-                                <i class="fas fa-pencil-alt"></i>
-                            </button>
-                        </td>
-
-
-                        <td>
-                            <button type="button" class="btn btn-link btn-sm" onclick="ConfirmaBorrarTurno({{resultado.pk}})">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-
-                        <td>
-                            <button type="button" class="btn btn-link btn-sm" onclick="ConfirmaAsistenciaTurno({{ resultado.pk }})">
-                                <i class="fas fa-check-circle"></i>
-                            </button>
-                        </td>
-
-
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-
-            <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center">
-                    {% if resultados.has_previous %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page=1">
-                                <i data-feather="chevrons-left"></i>
-                            </a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ resultados.previous_page_number }}">
-                                <i data-feather="chevron-left"></i>
-                            </a>
-                        </li>
-
-                    {% endif %}
-
-                    <li class="page-item disabled">
-                        <a class="page-link">
-                            Pag. {{ resultados.number }} de {{ resultados.paginator.num_pages }}
-                        </a>
-                    </li>
-
-                    {% if resultados.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ resultados.next_page_number }}">
-                                <i data-feather="chevron-right"></i>
-                            </a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ resultados.paginator.num_pages }}">
-                                <i data-feather="chevrons-right"></i>
-                            </a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </nav>
-        </form>
+        </form>    
     </div>
 
+    
+    {{resultados.fechahora.isoformat}}
+    
+
+    <div id="calendar"></div>
 {% endblock %}
 
 
-{% block js_extra%}
-
+{% block js_extra %}
     <script>
-        function ConfirmaBorrarTurno(pk) {
-            if(window.confirm("¿Deseas borrar el turno? ")){
-                BorrarTurno(pk);
-            }
-        }
+        $(document).ready(function () {
+            var Calendar = FullCalendar.Calendar;
+            var calendarEl = document.getElementById('calendar');    
 
-        function BorrarTurno(pk){
-            $.getJSON("/ajax-turnoborrar", {
-                parametro: pk,
-            }, function(data){
-                window.location.reload();
+            var calendar = new Calendar(calendarEl, {
+                locales: 'es',
+                plugins: [ 'bootstrap', 'interaction', 'dayGrid', 'timeGrid' ],
+                buttonText: {
+                    today: 'hoy',
+                },
+                events: [
+                    {% for r in resultados %}
+                        {
+                            title: '{{r.paciente}}',
+                            start: '{{r.fechahora.isoformat}}'
+                        },
+                    {% endfor %}
+                ],  
+
+                eventClick: function(info) {
+                    var eventObj = info.event;
+                    alert('Clickedddd ' + eventObj.title);
+                },
             })
-        };
+            calendar.render();
+        });
 
-        function ConfirmaAsistenciaTurno(pk) {
-            if(window.confirm("¿Deseas marcar como asistido al Paciente? ")){
-                AsistioTurno(pk);
-            }
+        /*
+
+        function FotmateaFecha(valor){
+            var meses = {};
+            meses.Enero = 1;
+            meses.Febrero = 2;
+            meses.Marzo = 3;
+            meses.Abril = 4;
+            meses.Mayo = 5;
+            meses.Junio = 6;
+            meses.Julio = 7;
+            meses.Agosto = 8;
+            meses.Septiembre = 9;
+            meses.Octubre = 10;
+            meses.Noviembre = 11;
+            meses.Diciembre = 12;
+            var tmp_fecha = valor.split("");
+            var tmp_hora = tmp_fecha[3].split(":");
+            var fecha = toString(tmp_fecha[2]) + " "
+            fecha = fecha + toString(meses.tmp_fecha[1]) + " "
+            fecha = fecha + 
+            26 Junio 2020 08:00
         }
+        */
 
-        function AsistioTurno(pk){
-            $.getJSON("/ajax-asistiopaciente/", {
-                parametro: pk,
-            }, function(data){
-                window.location.reload();
-            })
-        };
+      
 
     </script>
-    
 
+    
 {% endblock %}
