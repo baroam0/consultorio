@@ -26,8 +26,11 @@ def listadoturno(request):
     profesionales = Profesional.objects.all()
 
     if "select_profesional_busqueda" in request.GET:
-        profesional = Profesional.objects.get(pk=request.GET.get("select_profesional_busqueda"))
-        resultados = Turno.objects.filter(profesional=profesional)
+        if int(request.GET.get("select_profesional_busqueda")) == 0:
+            resultados = Turno.objects.all()
+        else:
+            profesional = Profesional.objects.get(pk=request.GET.get("select_profesional_busqueda"))
+            resultados = Turno.objects.filter(profesional=profesional)
         return render(
             request,
             'turnos/turno_list.html',
@@ -37,7 +40,7 @@ def listadoturno(request):
             }
         )
     else:
-        resultados = Turno.objects.all()
+        resultados = None
         return render(
             request,
             'turnos/turno_list.html',
