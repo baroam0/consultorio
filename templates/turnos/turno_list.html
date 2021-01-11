@@ -10,6 +10,7 @@
                 </div>
                 <div class="col-4">
                     <select class='form-control' id='select_profesional_busqueda' name='select_profesional_busqueda'>
+                        <option value=0> Todos</option>
                         {% for profesional in profesionales %}
                             <option value={{profesional.pk}}>
                                 {{profesional.usuario.last_name}}, {{profesional.usuario.first_name}}
@@ -131,10 +132,6 @@
 
     </div>
 
-    
-    {{resultados.fechahora.isoformat}}
-    
-
     <div id="calendar"></div>
 {% endblock %}
 
@@ -163,7 +160,7 @@
 
                 eventClick: function(info) {
                     var eventObj = info.event;
-                    alert('Clickedddd ' + eventObj.title);
+                    alert(eventObj.title);
                 },
             })
             calendar.render();
