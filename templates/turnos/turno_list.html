@@ -21,12 +21,115 @@
                 </div>
                 <div class="col-4">
                     <!--input class="form-control" id="txtBuscar" name="txtBuscar" placeholder="Buscar...."-->
+                    
                     <button type="submit" class="btn btn-default" title="Buscar!">
                         <i class="fas fa-search"></i>
                     </button>
+
+                    &nbsp;
+                    &nbsp;
+                    &nbsp;
+
+                    <button type="button" data-toggle="modal" data-target="#modal-turno" class="btn btn-default">
+                        <i class="fas fa-plus"></i>
+                    </button>
                 </div>
             </div>
-        </form>    
+        </form>
+
+
+
+        <div class="modal fade" id="modal-turno">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">Nuevo Turno</h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+
+                    <form id="form-modalturno">
+                        <p>
+                            <label for="id_obrasocial">Profesional:</label>
+                            
+                        </p>
+
+                        <p>
+                            <label for="id_numeroafiliado">Paciente:</label>
+                            
+                            <select id="modal-select-paciente">
+                            
+                            {% for paciente in pacientes %}
+                                <option value={{paciente.pk}}>
+                                    {{paciente}}
+                                </option>
+                                
+                            {% endfor %}
+                            </select>
+                            
+                        </p>
+
+                        <p>
+                            <label for="id_observaciones">Observaciones:</label>
+                            
+                        </p>
+
+                    </form>
+
+                    <table class="table table-hover" id="tabla-pacienteobrasocial">
+                        <thead>
+                            <tr>
+                                <th>Codigo</th>
+                                <th>Obra Social</th>
+                                <th>Numero de Afiliado</th>
+                                <th>Observacion</th>
+                                <th>Accion</th>
+                            </tr>
+                        </thead>
+        
+                        <tbody>
+                            {% if paciente_obrassociales %}
+                                {% for obrasocial in paciente_obrassociales %}
+                                    <tr id="{{obrasocial.obrasocial.pk}}">
+                                        <td>{{obrasocial.pk}}</td>
+                                        <td>{{obrasocial.obrasocial.descripcion.upper}}</td>
+                                        <td>{{obrasocial.numeroafiliado}}</td>
+                                        <td>{{obrasocial.observaciones}}</td>
+            
+                                        <td>
+                                            <button type="button" class="btn btn-link btn-sm btnSelect" onclick="javascript:LeerFilaTablaModal()">
+                                                <i class="fas fa-pencil-alt"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+
+                </div>
+                <div class="modal-footer justify-content-between">
+                    
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fas fa-times-circle"></i>
+                        Cerrar
+                    </button>
+                    
+                    <button type="button" class="btn btn-primary" onclick="javascrit:GrabarPacienteObraSocial()">
+                        <i class="fas fa-save"></i> 
+                        Guardar
+                    </button>
+                </div>
+              </div>
+              <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
+
+
     </div>
 
     <div id="calendar"></div>
@@ -36,6 +139,7 @@
 {% block js_extra %}
     <script>
         $(document).ready(function () {
+            $("#modal-select-paciente").select2();
             var Calendar = FullCalendar.Calendar;
             var calendarEl = document.getElementById('calendar');    
 
