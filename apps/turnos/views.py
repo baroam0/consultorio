@@ -55,8 +55,6 @@ def listadoturno(request):
         )
 
 
-
-
 def nuevoturno(request):
     if request.POST:
         form = TurnoForm(request.POST)

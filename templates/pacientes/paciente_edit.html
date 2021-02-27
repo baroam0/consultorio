@@ -398,6 +398,8 @@
                 var observaciones=fila.find("td:eq(3)").text();
 
                 $("#id_obrasocial").val(fila[0].id);
+                $("#id_obrasocial").trigger("change"); 
+                
                 $("#id_numeroafiliado").val(nroafiliado);
                 $("#id_observaciones").val(observaciones);
             });
