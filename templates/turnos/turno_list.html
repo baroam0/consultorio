@@ -30,7 +30,8 @@
                     &nbsp;
                     &nbsp;
 
-                    <button type="button" data-toggle="modal" data-target="#modal-turno" class="btn btn-default">
+                    <!--button type="button" data-toggle="modal" data-target="#modal-turno" class="btn btn-default"-->
+                    <button type="button" onclick="NuevoTurno()" class="btn btn-default">
                         <i class="fas fa-plus"></i>
                     </button>
                 </div>
@@ -54,56 +55,33 @@
 
                         <p>
                             <label for="id_numeroafiliado">Paciente:</label>
-                            
+
                             <select id="modal-select-paciente">
                             
                             {% for paciente in pacientes %}
                                 <option value={{paciente.pk}}>
                                     {{paciente}}
                                 </option>
-                                
                             {% endfor %}
                             </select>
-                            
                         </p>
 
                         <p>
-                            <label for="id_observaciones">Observaciones:</label>
+
+                            <div class="form-group">
+                                <label>Fecha :</label>
+                                <div class="input-group date" id="reservationdate" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input" data-target="#reservationdate"/>
+                                    <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                    </div>
+                                </div>
+
+                            </div>
                             
                         </p>
 
                     </form>
-
-                    <table class="table table-hover" id="tabla-pacienteobrasocial">
-                        <thead>
-                            <tr>
-                                <th>Codigo</th>
-                                <th>Obra Social</th>
-                                <th>Numero de Afiliado</th>
-                                <th>Observacion</th>
-                                <th>Accion</th>
-                            </tr>
-                        </thead>
-        
-                        <tbody>
-                            {% if paciente_obrassociales %}
-                                {% for obrasocial in paciente_obrassociales %}
-                                    <tr id="{{obrasocial.obrasocial.pk}}">
-                                        <td>{{obrasocial.pk}}</td>
-                                        <td>{{obrasocial.obrasocial.descripcion.upper}}</td>
-                                        <td>{{obrasocial.numeroafiliado}}</td>
-                                        <td>{{obrasocial.observaciones}}</td>
-            
-                                        <td>
-                                            <button type="button" class="btn btn-link btn-sm btnSelect" onclick="javascript:LeerFilaTablaModal()">
-                                                <i class="fas fa-pencil-alt"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                {% endfor %}
-                            {% endif %}
-                        </tbody>
-                    </table>
 
                 </div>
                 <div class="modal-footer justify-content-between">
@@ -124,8 +102,6 @@
             <!-- /.modal-dialog -->
         </div>
 
-
-
     </div>
 
     <div id="calendar"></div>
@@ -134,7 +110,16 @@
 
 {% block js_extra %}
     <script>
+
         $(document).ready(function () {
+
+            
+                $('#datetimepicker1').datetimepicker({
+                    language: 'es'
+                });
+                
+            
+
             $("#modal-select-paciente").select2();
             var Calendar = FullCalendar.Calendar;
             var calendarEl = document.getElementById('calendar');    
@@ -148,6 +133,7 @@
                 events: [
                     {% for r in resultados %}
                         {
+                            id: '{{r.pk}}',
                             title: '{{r.paciente}}',
                             start: '{{r.fechahora.isoformat}}'
                         },
@@ -156,11 +142,27 @@
 
                 eventClick: function(info) {
                     var eventObj = info.event;
+                    console.log(eventObj);
                     alert(eventObj.title);
                 },
             })
             calendar.render();
         });
+
+
+        function ModificarTurno(id){
+            $("#modal-turno").modal();
+        }
+
+
+        function NuevoTurno(){
+            if($("#select_profesional_busqueda").val()==0){
+                alert("Por favor elija un profesional")
+            }else{
+                $("#modal-turno").modal();
+
+            }
+        }
 
 
     </script>
