@@ -60,8 +60,12 @@
                 <thead>
                     <tr>
                         <th>Apellido y Nombre</th>
+                        <th>Edad</th>
                         <th>Telefono</th>
                         <th>Telefono Opcional</th>
+                        <th>Domicilio</th>
+                        <th>Fecha Nacimiento</th>
+                        <th>Ocupacion</th>
                         <th>Accion</th>
                     </tr>
                 </thead>
@@ -70,9 +74,12 @@
                     {% for resultado in resultados %}
                     <tr>
                         <td>{{resultado.apellido.upper }}, {{resultado.nombre.upper }}</td>
+                        <td>{{resultado.get_edad}}</td>
                         <td>{{resultado.telefono}}</td>
                         <td>{{resultado.telefono_opcional}}</td>
-
+                        <td>{{resultado.domicilio}}</td>
+                        <td>{{resultado.fecha_nacimiento}}</td>
+                        <td>{{resultado.ocupacion}}</td>
                         <td>
                             <button type="button" class="btn btn-link btn-sm" onclick="location.href='/pacienteeditar/' + {{ resultado.pk }}">
                                 <i class="fas fa-pencil-alt"></i>

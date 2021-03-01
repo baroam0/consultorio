@@ -1,3 +1,5 @@
+
+from datetime import datetime
 from django.db import models
 
 from apps.catalogosenfermedades.models import Catalogo
@@ -42,6 +44,12 @@ class Paciente(models.Model):
         Catalogo, on_delete=models.CASCADE, null=True, blank=True
     )
     observacion = models.TextField(null=True, blank=True)
+
+    def get_edad(self):
+        hoy = datetime.today().date()
+        #fechanac = datetime.strptime(fechanac, "%Y-%m-%d")
+        anios = int((hoy - self.fecha_nacimiento).days/365.25)
+        return anios
 
     def __str__(self):
         return self.apellido.upper() + ', ' +  self.nombre.upper()
