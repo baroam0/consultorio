@@ -37,8 +37,7 @@ def listadopaciente(request):
                 Q(apellido__icontains=parametro) |
                 Q(nombre__contains=parametro)
             ).filter(profesional_tratante=usuarioprofesional).order_by('apellido')
-            #consulta = consulta.filter(profesional_tratante=usuarioprofesional)
-            
+            #consulta = consulta.filter(profesional_tratante=usuarioprofesional)            
     else:
         if usuario.is_staff:
             consulta = Paciente.objects.all().order_by('apellido')
@@ -233,6 +232,39 @@ def ajax_editarpacienteobrasocial(request):
             dict_tmp = dict()
 
     return JsonResponse(list_tmp, safe=False)
-    
+
+
+def reportelistado(request):
+    if request.user.is_authenticated:
+        usuario = User.objects.get(username=str(request.user.username))
+        if not usuario.is_staff:
+            usuarioprofesional = Profesional.objects.get(usuario=usuario)
+
+    if "txtBuscar" in request.GET:
+        parametro = request.GET.get("txtBuscar")        
+        if usuario.is_staff:
+            consulta = Paciente.objects.filter(
+                Q(apellido__icontains=parametro) |
+                Q(nombre__contains=parametro)
+            ).order_by('apellido')
+        else:
+            consulta = Paciente.objects.filter(
+                Q(apellido__icontains=parametro) |
+                Q(nombre__contains=parametro)
+            ).filter(profesional_tratante=usuarioprofesional).order_by('apellido')
+            #consulta = consulta.filter(profesional_tratante=usuarioprofesional)            
+    else:
+        if usuario.is_staff:
+            consulta = Paciente.objects.all().order_by('apellido')
+        else:
+            consulta = Paciente.objects.filter(profesional_tratante=usuarioprofesional).order_by('apellido')
+
+    paginador = Paginator(consulta, 20)
+    if "page" in request.GET:
+        page = request.GET.get('page')
+    else:
+        page = 1
+    resultados = paginador.get_page(page)
+    return render(request, 'pacientes/reporte_listado.html', {'resultados': resultados})
 
 # Create your views here.
