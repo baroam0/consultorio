@@ -44,6 +44,10 @@
                     <button type="button" class="btn btn-default" title="Imprimir listado!" onclick="javascrit:ReporteListado()">
                         <i class="fas fa-print"></i>
                     </button>
+
+                    <button type="button" class="btn btn-default" title="Imprimir listado!" onclick="javascrit:exportTableToExcel()">
+                        <i class="fas fa-file-excel"></i>
+                    </button>
                 </div>
 
                 <div class="col-3">
@@ -52,7 +56,7 @@
 
             <br>
 
-            <table class="table table-hover">
+            <table class="table table-hover" id="tablaDatos">
                 <thead>
                     <tr>
                         <th>Apellido y Nombre</th>
@@ -134,6 +138,40 @@
             }else{   
                 var destino = origin + "/reportelistado/?"  + hash;
                 window.open(destino); 
+            }
+        }
+
+
+        function exportTableToExcel(filename = ''){
+            //var tableID = document.getElementById("tablaDatos");
+            
+            var downloadLink;
+            var dataType = 'application/vnd.ms-excel';
+            var tableSelect = document.getElementById("tablaDatos");
+            var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+    
+            // Specify file name
+            filename = filename?filename+'.xls':'excel_data.xls';
+    
+            // Create download link element
+            downloadLink = document.createElement("a");
+    
+            document.body.appendChild(downloadLink);
+    
+            if(navigator.msSaveOrOpenBlob){
+                var blob = new Blob(['ufeff', tableHTML], {
+                    type: dataType
+                });
+                navigator.msSaveOrOpenBlob( blob, filename);
+            }else{
+                // Create a link to the file
+                downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+    
+                // Setting the file name
+                downloadLink.download = filename;
+        
+                //triggering the function
+                downloadLink.click();
             }
         }
 
