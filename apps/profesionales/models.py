@@ -15,6 +15,7 @@ class Especialidad(models.Model):
 class Profesional(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE)
     especialidad = models.ManyToManyField(Especialidad)
+    matricula = models.IntegerField(null=True, blank=True)
     numero_prestador = models.IntegerField(null=True, blank=True)
     numero_prestador_vencimiento = models.DateField(null=True, blank=True)
     telefono = models.CharField(max_length=12, blank=False, null=False)

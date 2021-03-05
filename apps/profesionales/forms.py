@@ -30,6 +30,7 @@ class ProfesionalForm(forms.ModelForm):
         required=False,
         label = 'Especialidad',
     )
+    matricula = forms.IntegerField(label="Matricula Profesional", required=False)
     numero_prestador = forms.IntegerField(label="Numero Prestador", required=False)
     numero_prestador_vencimiento = forms.DateField(label="Vecimiento", required=False)
     telefono = forms.CharField(label="Telefono", required=True)
@@ -45,7 +46,7 @@ class ProfesionalForm(forms.ModelForm):
 
     class Meta:
         model = Profesional
-        fields = ['especialidad', 'numero_prestador',
+        fields = ['especialidad', 'matricula', 'numero_prestador',
             'numero_prestador_vencimiento', 'telefono',
             'telefono_opcional', 'observacion']
 
