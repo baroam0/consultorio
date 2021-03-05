@@ -1,14 +1,15 @@
 
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm as UsuarioForm
+#from django.contrib.auth.forms import UserCreationForm as UsuarioForm
+
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.forms import inlineformset_factory
 from django.shortcuts import render, redirect
 
 from .models import Profesional
-from .forms import ProfesionalForm
+from .forms import ProfesionalForm, UsuarioForm
 
 
 def listadoprofesional(request):
@@ -109,13 +110,18 @@ def editarprofesional(request, pk):
     consulta = Profesional.objects.get(pk=pk)
     usuario = User.objects.get(pk=consulta.usuario.pk)
     if request.POST:
+        form_usuario = UsuarioForm(request.POST, instance=usuario)
         form = ProfesionalForm(request.POST, instance=consulta)
         if form.is_valid:
+            form_usuario.save()
             profesional = form.save()
             messages.success(request, "SE HAN ACTUALIZADO EL PROFESIONAL")
             return redirect('/profesionallistado')
     else:
         form_usuario = UsuarioForm(instance=usuario)
+        print(usuario.first_name)
+        print("//////////////////")
+        print(usuario.last_name)
         form = ProfesionalForm(instance=consulta)
         return render(
             request,
