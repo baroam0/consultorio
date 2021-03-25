@@ -9,6 +9,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 
+from apps.obrassociales.models import ObraSocial
 from apps.pacientes.models import Paciente
 from apps.profesionales.models import Profesional
 from apps.turnos.forms import TurnoForm
@@ -24,6 +25,7 @@ def listadoturno(request):
         else:
             profesionales = Profesional.objects.all()
     """
+    obrassociales = ObraSocial.objects.all()
     profesionales = Profesional.objects.all()
     pacientes = Paciente.objects.all()
 
@@ -37,6 +39,7 @@ def listadoturno(request):
             request,
             'turnos/turno_list.html',
             {
+                'obrassociales': obrassociales,
                 'pacientes': pacientes,
                 'profesionales': profesionales,
                 'resultados': resultados
@@ -48,6 +51,7 @@ def listadoturno(request):
             request,
             'turnos/turno_list.html',
             {
+                'obrassociales': obrassociales,
                 'pacientes': pacientes,
                 'profesionales': profesionales,
                 'resultados': resultados

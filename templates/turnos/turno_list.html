@@ -4,6 +4,16 @@
 {% block content %}
     <div class="container">
 
+        <style>
+            .select2-container{
+                width: 100%!important;
+            }
+            .select2-search--dropdown .select2-search__field {
+                width: 98%;
+            }
+        </style>
+
+
         <form action="/turnolistado" method="GET">
             <div class="form-inline">
                 <div class="col-4">
@@ -54,7 +64,7 @@
                     <form id="form-modalturno">
 
                         <p>
-                            <label for="id_numeroafiliado">Paciente:</label>
+                            <label for="modal-select-paciente">Paciente:</label>
 
                             <select id="modal-select-paciente">
                                 {% for paciente in pacientes %}
@@ -78,7 +88,6 @@
                         </p>
 
                         <p>
-
                             <div class="form-group">
                                 <label>Hora:</label>
         
@@ -90,6 +99,21 @@
                                 </div>
                             </div>
                         </p>
+
+                        <p>
+                            <div class="form-group">
+                                <label for="modal-select-obrasocial">Obras Sociales:</label>
+
+                                <select id="modal-select-obrasocial" class="form-control">
+                                    {% for obrasocial in obrassociales %}
+                                        <option value={{obrasocial.pk}}>
+                                            {{obrasocial.abreviatura.upper}}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </p>
+
 
                     </form>
 
@@ -123,12 +147,6 @@
 
         $(document).ready(function () {
 
-            /*
-            $('#datetimepicker1').datepicker({
-                
-            });
-            */
-
             $('#reservationdate').datetimepicker({
                 format: 'L'
             });
@@ -139,11 +157,13 @@
 
 
             $("#modal-select-paciente").select2();
+            $("#modal-select-obrasocial").select2();
+
             var Calendar = FullCalendar.Calendar;
             var calendarEl = document.getElementById('calendar');    
 
             var calendar = new Calendar(calendarEl, {
-                locales: 'es',
+                locale: 'es',
                 plugins: [ 'bootstrap', 'interaction', 'dayGrid', 'timeGrid' ],
                 buttonText: {
                     today: 'hoy',
