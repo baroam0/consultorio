@@ -1,183 +1,191 @@
 
-
 {% extends 'base.html' %}
 
 {% block content %}
-
     <div class="container">
-
-        <br>
-        <div class="row">
-            <div class="col-sm-4"></div>
-            <div class="col-sm-4">
-                <h2>TURNOS</h2>
-            </div>
-            <div class="col-sm-4"></div>
-        </div>
-
-        {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-success" role="alert">
-                    {{message}}
-                </div>
-            {% endfor %}
-        {% endif %}
-        
-        <hr>
 
         <form action="/turnolistado" method="GET">
             <div class="form-inline">
-                <div class="col-3">
+                <div class="col-4">
                 </div>
-                <div class="col-2">
+                <div class="col-4">
+                    <select class='form-control' id='select_profesional_busqueda' name='select_profesional_busqueda'>
+                        <option value=0> Todos</option>
+                        {% for profesional in profesionales %}
+                            <option value={{profesional.pk}}>
+                                {{profesional.usuario.last_name}}, {{profesional.usuario.first_name}}
+                            </option>
+                            
+                        {% endfor%}
+                    </select>
                 </div>
-                <div class="col-7">
-
-                    {% if profesionales %}
-                        <select id="select_profesional_busqueda" name="select_profesional_busqueda" class="form-control">
-                            {% for profesional in profesionales %}
-                                <option value={{profesional.pk}}>
-                                    {{profesional}}
-                                </option>
-                            {% endfor%}
-                        </select>
-                    {% endif %}
-
-                    <input class="form-control" id="txtBuscar"  name="txtBuscar" placeholder="Buscar....">
+                <div class="col-4">
+                    <!--input class="form-control" id="txtBuscar" name="txtBuscar" placeholder="Buscar...."-->
+                    
                     <button type="submit" class="btn btn-default" title="Buscar!">
                         <i class="fas fa-search"></i>
                     </button>
 
-                    <button type="button" class="btn btn-default" title="Nuevo Turno!" onclick="location.href='/turnonuevo'">
-                        <i class="fas fa-plus"></i>
-                    </button>
+                    &nbsp;
+                    &nbsp;
+                    &nbsp;
 
-                    <button type="button" class="btn btn-default" title="Nuevo Paciente!" onclick="location.href='/pacientenuevo'">
-                        <i class="fas fa-user"></i>
+                    <!--button type="button" data-toggle="modal" data-target="#modal-turno" class="btn btn-default"-->
+                    <button type="button" onclick="NuevoTurno()" class="btn btn-default">
+                        <i class="fas fa-plus"></i>
                     </button>
                 </div>
             </div>
-        
-            <br>
-
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Fecha/Hora</th>
-                        <th>Profesional</th>
-                        <th>Paciente</th>
-                        <th>Editar</th>
-                        <th>Borrar</th>
-                        <th>Asistio</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {% for resultado in resultados %}
-                    <tr>
-                        <td>{{resultado.fechahora}}</td>
-                        <td>{{resultado.profesional}}</td>
-                        <td>{{resultado.paciente}}</td>
-
-                        <td>
-                            <button type="button" class="btn btn-link btn-sm" onclick="location.href='/turnoeditar/' + {{ resultado.pk }}">
-                                <i class="fas fa-pencil-alt"></i>
-                            </button>
-                        </td>
-
-
-                        <td>
-                            <button type="button" class="btn btn-link btn-sm" onclick="ConfirmaBorrarTurno({{resultado.pk}})">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-
-                        <td>
-                            <button type="button" class="btn btn-link btn-sm" onclick="ConfirmaAsistenciaTurno({{ resultado.pk }})">
-                                <i class="fas fa-check-circle"></i>
-                            </button>
-                        </td>
-
-
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-
-            <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center">
-                    {% if resultados.has_previous %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page=1">
-                                <i data-feather="chevrons-left"></i>
-                            </a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ resultados.previous_page_number }}">
-                                <i data-feather="chevron-left"></i>
-                            </a>
-                        </li>
-
-                    {% endif %}
-
-                    <li class="page-item disabled">
-                        <a class="page-link">
-                            Pag. {{ resultados.number }} de {{ resultados.paginator.num_pages }}
-                        </a>
-                    </li>
-
-                    {% if resultados.has_next %}
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ resultados.next_page_number }}">
-                                <i data-feather="chevron-right"></i>
-                            </a>
-                        </li>
-                        <li class="page-item">
-                            <a class="page-link" href="?page={{ resultados.paginator.num_pages }}">
-                                <i data-feather="chevrons-right"></i>
-                            </a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </nav>
         </form>
+
+
+
+        <div class="modal fade" id="modal-turno">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h4 class="modal-title">Nuevo Turno</h4>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+
+                    <form id="form-modalturno">
+
+                        <p>
+                            <label for="id_numeroafiliado">Paciente:</label>
+
+                            <select id="modal-select-paciente">
+                                {% for paciente in pacientes %}
+                                    <option value={{paciente.pk}}>
+                                        {{paciente}}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </p>
+
+                        <p>
+                            <div class="form-group">
+                                <label>Fecha:</label>
+                                  <div class="input-group date" id="reservationdate" data-target-input="nearest">
+                                      <input type="text" class="form-control datetimepicker-input" data-target="#reservationdate"/>
+                                      <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
+                                          <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                                      </div>
+                                  </div>
+                              </div>
+                        </p>
+
+                        <p>
+
+                            <div class="form-group">
+                                <label>Hora:</label>
+        
+                                <div class="input-group date" id="timepicker" data-target-input="nearest">
+                                    <input type="text" class="form-control datetimepicker-input" data-target="#timepicker"/>
+                                    <div class="input-group-append" data-target="#timepicker" data-toggle="datetimepicker">
+                                        <div class="input-group-text"><i class="far fa-clock"></i></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </p>
+
+                    </form>
+
+                </div>
+                <div class="modal-footer justify-content-between">
+                    
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        <i class="fas fa-times-circle"></i>
+                        Cerrar
+                    </button>
+                    
+                    <button type="button" class="btn btn-primary" onclick="javascrit:GrabarPacienteObraSocial()">
+                        <i class="fas fa-save"></i> 
+                        Guardar
+                    </button>
+                </div>
+              </div>
+              <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
     </div>
 
+    <div id="calendar"></div>
 {% endblock %}
 
 
-{% block js_extra%}
-
+{% block js_extra %}
     <script>
-        function ConfirmaBorrarTurno(pk) {
-            if(window.confirm("¿Deseas borrar el turno? ")){
-                BorrarTurno(pk);
+
+        $(document).ready(function () {
+
+            /*
+            $('#datetimepicker1').datepicker({
+                
+            });
+            */
+
+            $('#reservationdate').datetimepicker({
+                format: 'L'
+            });
+
+            $('#timepicker').datetimepicker({
+                format: 'LT'
+            })
+
+
+            $("#modal-select-paciente").select2();
+            var Calendar = FullCalendar.Calendar;
+            var calendarEl = document.getElementById('calendar');    
+
+            var calendar = new Calendar(calendarEl, {
+                locales: 'es',
+                plugins: [ 'bootstrap', 'interaction', 'dayGrid', 'timeGrid' ],
+                buttonText: {
+                    today: 'hoy',
+                },
+                events: [
+                    {% for r in resultados %}
+                        {
+                            id: '{{r.pk}}',
+                            title: '{{r.paciente}}',
+                            start: '{{r.fechahora.isoformat}}'
+                        },
+                    {% endfor %}
+                ],  
+
+                eventClick: function(info) {
+                    var eventObj = info.event;
+                    console.log(eventObj);
+                    alert(eventObj.title);
+                },
+            })
+            calendar.render();
+        });
+
+
+        function ModificarTurno(id){
+            $("#modal-turno").modal();
+        }
+
+
+        function NuevoTurno(){
+            if($("#select_profesional_busqueda").val()==0){
+                alert("Por favor elija un profesional")
+            }else{
+                var profesional = $('#select_profesional_busqueda').find(':selected');
+                console.log(profesional.text());
+                $("#modal-turno").modal();
+
             }
         }
 
-        function BorrarTurno(pk){
-            $.getJSON("/ajax-turnoborrar", {
-                parametro: pk,
-            }, function(data){
-                window.location.reload();
-            })
-        };
-
-        function ConfirmaAsistenciaTurno(pk) {
-            if(window.confirm("¿Deseas marcar como asistido al Paciente? ")){
-                AsistioTurno(pk);
-            }
-        }
-
-        function AsistioTurno(pk){
-            $.getJSON("/ajax-asistiopaciente/", {
-                parametro: pk,
-            }, function(data){
-                window.location.reload();
-            })
-        };
 
     </script>
-    
 
+    
 {% endblock %}
