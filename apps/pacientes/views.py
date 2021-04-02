@@ -144,6 +144,7 @@ def ajax_obrasocial_paciente(request, pk):
         for dato in pacientes_obrasociales:
             dict_tmp["id_obrasocial"] = dato.obrasocial.pk
             dict_tmp["descripcion_obrasocial"] = dato.obrasocial.descripcion.upper()
+            dict_tmp["abreviatura_obrasocial"] = dato.obrasocial.abreviatura.upper()
             list_tmp.append(dict_tmp)
             dict_tmp = dict()
     else:

@@ -9,6 +9,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 
+from apps.obrassociales.models import ObraSocial
 from apps.pacientes.models import Paciente
 from apps.profesionales.models import Profesional
 from apps.turnos.forms import TurnoForm
@@ -26,6 +27,7 @@ def listadoturno(request):
     """
     profesionales = Profesional.objects.all()
     pacientes = Paciente.objects.all()
+    obras_sociales = ObraSocial.objects.all().order_by("abreviatura")
 
     if "select_profesional_busqueda" in request.GET:
         if int(request.GET.get("select_profesional_busqueda")) == 0:
@@ -37,6 +39,7 @@ def listadoturno(request):
             request,
             'turnos/turno_list.html',
             {
+                'obrassociales': obras_sociales,
                 'pacientes': pacientes,
                 'profesionales': profesionales,
                 'resultados': resultados
@@ -48,6 +51,7 @@ def listadoturno(request):
             request,
             'turnos/turno_list.html',
             {
+                'obrassociales': obras_sociales,
                 'pacientes': pacientes,
                 'profesionales': profesionales,
                 'resultados': resultados
@@ -190,6 +194,40 @@ def ajax_turnoborrar(request):
     return JsonResponse(dicc_tmp, safe=False)
 
 
+def ajax_grabarturno(request):
+    fecha = datetime.today()
+
+    vectormateriales=request.POST.getlist('vectormateriales[]')
+    vectorcantidades=request.POST.getlist('vectorcantidades[]')
+    vectorunidades=request.POST.getlist('vectorunidades[]')
+    vectorprecios=request.POST.getlist('vectorprecios[]')
+
+    vectormateriales, vectorcantidades, vectorcantidades
+
+    operacion = Operacion(
+        fecha=fecha
+    )
+
+    operacion.save()
+    operacion = Operacion.objects.latest("pk")
+
+    for (material, unidad, cantidad, precio) in zip(vectormateriales, vectorunidades, vectorcantidades, vectorprecios):
+        material = Material.objects.get(pk=int(material))
+
+        detalleoperacion = DetalleOperacion(
+            operacion=operacion,
+            material=material,
+            cantidad=cantidad,
+            precio_unitario=precio,
+            precio_subtotal= float(cantidad)*float(precio)
+        )
+
+        detalleoperacion.save()
+
+    data = {
+        "status": 200
+    }
+    return JsonResponse(data)
 
 
 # Create your views here.

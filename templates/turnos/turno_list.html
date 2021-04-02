@@ -44,7 +44,7 @@
             <div class="modal-dialog modal-lg">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h4 class="modal-title">Nuevo Turno</h4>
+                  <h4 class="modal-title">Nuevo Turno  <label id="lbl_profesional"></label></h4>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
@@ -53,7 +53,7 @@
 
                     <form id="form-modalturno">
 
-                        <p>
+                        
                             <label for="id_numeroafiliado">Paciente:</label>
 
                             <select id="modal-select-paciente">
@@ -63,22 +63,18 @@
                                     </option>
                                 {% endfor %}
                             </select>
-                        </p>
+                        
 
-                        <p>
+                        
                             <div class="form-group">
                                 <label>Fecha:</label>
                                   <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                      <input type="text" class="form-control datetimepicker-input" data-target="#reservationdate"/>
+                                      <input id="txt_fecha" type="text" class="form-control datetimepicker-input" data-target="#reservationdate"/>
                                       <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
                                           <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                       </div>
                                   </div>
                               </div>
-                        </p>
-
-                        <p>
-
                             <div class="form-group">
                                 <label>Hora:</label>
         
@@ -89,7 +85,22 @@
                                     </div>
                                 </div>
                             </div>
-                        </p>
+                        
+                            <label for="id_numeroafiliado">Obra Social:</label>
+                            <select id="modal-select-paciente">
+                                {% for obrasocial in obrassociales %}
+                                    <option value={{obrasocial.pk}}>
+                                        {{obrasocial.abreviatura.upper}}
+                                    </option>
+                                {% endfor %}
+                            </select>
+
+                            <label>Asistio:</label>
+                            <label>Entrega:</label>
+                            <label>Entrega Parcial:</label>
+
+                            <label for="modal-observacion">Observacion:</label>
+                            <textarea id="modal-observacion"></textarea>                        
 
                     </form>
 
@@ -101,7 +112,7 @@
                         Cerrar
                     </button>
                     
-                    <button type="button" class="btn btn-primary" onclick="javascrit:GrabarPacienteObraSocial()">
+                    <button type="button" class="btn btn-primary" onclick="javascrit:GrabarTurno()">
                         <i class="fas fa-save"></i> 
                         Guardar
                     </button>
@@ -120,21 +131,27 @@
 
 {% block js_extra %}
     <script>
+        
 
         $(document).ready(function () {
+            var parametroselect = "";
+            parametroselect = ObtenerParametroURL();
 
-            /*
-            $('#datetimepicker1').datepicker({
-                
-            });
-            */
+            if(parametroselect==null){
+            }else{
+                $('#select_profesional_busqueda').val(parametroselect);
+            }
+
 
             $('#reservationdate').datetimepicker({
-                format: 'L'
+                format: 'L',
+                locale: 'es'
             });
 
+
             $('#timepicker').datetimepicker({
-                format: 'LT'
+                format: 'LT',
+                locale: 'es'
             })
 
 
@@ -168,6 +185,21 @@
         });
 
 
+        function GrabarTurno(){
+            var paciente_id = $("#modal-select-paciente").val();
+            //var fecha = $("#reservationdate").data("datetimepicker").getDate();
+            //var fecha = $("#reservationdate").text();
+            var fecha = $("#reservationdate").find("input").val();
+            var hora = $("#timepicker").find("input").val();
+
+            console.log(hora);
+            //modal-select-paciente
+            //$('#reservationdate')
+            //reservationdate
+            //timepicker
+        }
+
+
         function ModificarTurno(id){
             $("#modal-turno").modal();
         }
@@ -178,12 +210,21 @@
                 alert("Por favor elija un profesional")
             }else{
                 var profesional = $('#select_profesional_busqueda').find(':selected');
-                console.log(profesional.text());
+                $('#lbl_profesional').text(profesional.text());
                 $("#modal-turno").modal();
-
             }
         }
 
+
+        function ObtenerParametroURL(){
+            var queryString = window.location.search;
+            var urlParams = new URLSearchParams(queryString);
+            var parametroprofesional = urlParams.get('select_profesional_busqueda');
+            return parametroprofesional;
+            
+        }
+
+        
 
     </script>
 
