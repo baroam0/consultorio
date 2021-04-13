@@ -79,7 +79,7 @@
                             <div class="form-group">
                                 <label>Fecha:</label>
                                   <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                      <input type="text" class="form-control datetimepicker-input" data-target="#reservationdate"/>
+                                      <input type="text" id="txt-fechaturno" class="form-control datetimepicker-input" data-target="#reservationdate"/>
                                       <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
                                           <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                       </div>
@@ -92,7 +92,7 @@
                                 <label>Hora:</label>
         
                                 <div class="input-group date" id="timepicker" data-target-input="nearest">
-                                    <input type="text" class="form-control datetimepicker-input" data-target="#timepicker"/>
+                                    <input type="text" id="txt-horaturno" class="form-control datetimepicker-input" data-target="#timepicker"/>
                                     <div class="input-group-append" data-target="#timepicker" data-toggle="datetimepicker">
                                         <div class="input-group-text"><i class="far fa-clock"></i></div>
                                     </div>
@@ -114,6 +114,33 @@
                             </div>
                         </p>
 
+                        <p>
+                            <div class="form-group">
+                                <label for="txt-asistio">Asistio:</label>
+                                <input type="checkbox" id="txt-asistio">
+                            </div>
+                        </p>
+
+                        <p>
+                            <div class="form-group">
+                                <label for="txt-entrega">Entrega: </label>
+                                <input type="checkbox" id="txt-entrega">
+                            </div>
+                        </p>
+
+                        <p>
+                            <div class="form-group">
+                                <label for="txt-entrega-parcial">Entrega Parcial: </label>
+                                <input type="checkbox" id="txt-entrega-parcial">
+                            </div>
+                        </p>
+
+                        <p>
+                            <div class="form-group">
+                                <label for="txt-observacion">Observacion: </label>
+                                <textarea id="txt-observacion" class="form-control"></textarea>
+                            </div>
+                        </p>
 
                     </form>
 
@@ -125,7 +152,7 @@
                         Cerrar
                     </button>
                     
-                    <button type="button" class="btn btn-primary" onclick="javascrit:GrabarPacienteObraSocial()">
+                    <button type="button" class="btn btn-primary" onclick="javascrit:GuardarTurno()">
                         <i class="fas fa-save"></i> 
                         Guardar
                     </button>
@@ -148,7 +175,7 @@
         $(document).ready(function () {
 
             $('#reservationdate').datetimepicker({
-                format: 'L'
+                format: 'L',
             });
 
             $('#timepicker').datetimepicker({
@@ -200,7 +227,23 @@
                 var profesional = $('#select_profesional_busqueda').find(':selected');
                 console.log(profesional.text());
                 $("#modal-turno").modal();
+            }
+        }
 
+        function GuardarTurno(){
+            var paciente = $("#modal-select-paciente").val();
+            var fecha = $("#txt-fechaturno").val();
+            var hora = $("#txt-horaturno").val();
+            var obrasocial = $("#modal-select-obrasocial").val();
+            var asisitio = $("#txt-asistio").val();
+            var entrega = $("#txt-entrega").val();
+            var entregaparcial = $("#txt-entrega-parcial").val();
+
+
+            if(fecha=="" || hora==""){
+                alert("Por favor ingresa una fecha/hora.")
+            }else{
+                console.log(entrega);
             }
         }
 

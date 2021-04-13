@@ -34,8 +34,8 @@ from apps.pacientes.views import listadopaciente, nuevopaciente, \
 from apps.profesionales.views import listadoprofesional, \
     editarprofesional, perfil, crearprofesional
 
-from apps.turnos.views import listadoturno, nuevoturno, \
-    ajax_asistiopaciente, ajax_turnoborrar, editarturno
+from apps.turnos.views import listadoturno, ajax_nuevoturno, \
+    ajax_asistiopaciente, ajax_turnoborrar, ajax_editarturno
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -78,8 +78,8 @@ urlpatterns = [
     path('profesionaleditar/<int:pk>/', editarprofesional),
     #path('turnoperiodo/', turnoperiodo),
     path('turnolistado/', listadoturno),
-    path('turnonuevo/', nuevoturno),
+    path('turnonuevo/', ajax_nuevoturno),
     path('ajax-asistiopaciente/', ajax_asistiopaciente),
     path('ajax-turnoborrar/', ajax_turnoborrar),
-    path('turnoeditar/<int:pk>/', editarturno),
+    path('turnoeditar/<int:pk>/', ajax_editarturno),
 ]
