@@ -4,6 +4,16 @@
 {% block content %}
     <div class="container">
 
+        <style>
+            .select2-container{
+                width: 100%!important;
+            }
+            .select2-search--dropdown .select2-search__field {
+                width: 98%;
+            }
+        </style>
+
+
         <form action="/turnolistado" method="GET">
             <div class="form-inline">
                 <div class="col-4">
@@ -53,7 +63,6 @@
 
                     <form id="form-modalturno">
 
-                        
                             <label for="id_numeroafiliado">Paciente:</label>
 
                             <select id="modal-select-paciente">
@@ -63,9 +72,7 @@
                                     </option>
                                 {% endfor %}
                             </select>
-                        
-
-                        
+                                                
                             <div class="form-group">
                                 <label>Fecha:</label>
                                   <div class="input-group date" id="reservationdate" data-target-input="nearest">
@@ -75,6 +82,7 @@
                                       </div>
                                   </div>
                               </div>
+
                             <div class="form-group">
                                 <label>Hora:</label>
         
@@ -86,22 +94,37 @@
                                 </div>
                             </div>
                         
-                            <label for="id_numeroafiliado">Obra Social:</label>
-                            <select id="modal-select-paciente">
-                                {% for obrasocial in obrassociales %}
-                                    <option value={{obrasocial.pk}}>
-                                        {{obrasocial.abreviatura.upper}}
-                                    </option>
-                                {% endfor %}
-                            </select>
+                            <div class="form-group">
+                                <label for="modal-select-obrasocial">Obras Sociales:</label>
 
-                            <label>Asistio:</label>
-                            <label>Entrega:</label>
-                            <label>Entrega Parcial:</label>
+                                <select id="modal-select-obrasocial" class="form-control">
+                                    {% for obrasocial in obrassociales %}
+                                        <option value={{obrasocial.pk}}>
+                                            {{obrasocial.abreviatura.upper}}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
 
-                            <label for="modal-observacion">Observacion:</label>
-                            <textarea id="modal-observacion"></textarea>                        
+                            <div class="form-group">
+                                <label>Asistio:</label>
+                                <input type="checkbox">
+                            </div>
 
+                            <div class="form-group">
+                                <label>Entrega:</label>
+                                <input type="checkbox">
+                            </div>
+
+                            <div class="form-group">
+                                <label>Entrega Parcial:</label>
+                                <input type="checkbox">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="modal-observacion">Observacion:</label>
+                                <textarea id="modal-observacion" class="form-control"></textarea>
+                            </div>
                     </form>
 
                 </div>
@@ -142,7 +165,6 @@
                 $('#select_profesional_busqueda').val(parametroselect);
             }
 
-
             $('#reservationdate').datetimepicker({
                 format: 'L',
                 locale: 'es'
@@ -156,11 +178,13 @@
 
 
             $("#modal-select-paciente").select2();
+            $("#modal-select-obrasocial").select2();
+
             var Calendar = FullCalendar.Calendar;
             var calendarEl = document.getElementById('calendar');    
 
             var calendar = new Calendar(calendarEl, {
-                locales: 'es',
+                locale: 'es',
                 plugins: [ 'bootstrap', 'interaction', 'dayGrid', 'timeGrid' ],
                 buttonText: {
                     today: 'hoy',

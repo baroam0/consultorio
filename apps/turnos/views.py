@@ -25,6 +25,7 @@ def listadoturno(request):
         else:
             profesionales = Profesional.objects.all()
     """
+    obrassociales = ObraSocial.objects.all()
     profesionales = Profesional.objects.all()
     pacientes = Paciente.objects.all()
     obras_sociales = ObraSocial.objects.all().order_by("abreviatura")
@@ -39,7 +40,7 @@ def listadoturno(request):
             request,
             'turnos/turno_list.html',
             {
-                'obrassociales': obras_sociales,
+                'obrassociales': obrassociales,
                 'pacientes': pacientes,
                 'profesionales': profesionales,
                 'resultados': resultados
