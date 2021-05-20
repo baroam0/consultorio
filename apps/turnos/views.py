@@ -132,6 +132,8 @@ def nuevoturno(request):
     
     return JsonResponse(data)
 
+def ajax_editarturno(request, pk):
+    return None
 
 def editarturno(request, pk):
     return None

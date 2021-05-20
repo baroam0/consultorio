@@ -87,7 +87,7 @@
                                 <label>Hora:</label>
         
                                 <div class="input-group date" id="timepicker" data-target-input="nearest">
-                                    <input type="text" class="form-control datetimepicker-input" data-target="#timepicker"/>
+                                    <input type="text" id="txt-horaturno" class="form-control datetimepicker-input" data-target="#timepicker"/>
                                     <div class="input-group-append" data-target="#timepicker" data-toggle="datetimepicker">
                                         <div class="input-group-text"><i class="far fa-clock"></i></div>
                                     </div>
@@ -106,6 +106,7 @@
                                 </select>
                             </div>
 
+<<<<<<< HEAD
                             <div class="form-group">
                                 <label>Asistio:</label>
                                 <input type="checkbox" id="modal-chk-asistio">
@@ -115,6 +116,35 @@
                                 <label>Entrega:</label>
                                 <input type="checkbox" id="modal-chk-entrega">
                             </div>
+=======
+                        <p>
+                            <div class="form-group">
+                                <label for="txt-asistio">Asistio:</label>
+                                <input type="checkbox" id="txt-asistio">
+                            </div>
+                        </p>
+
+                        <p>
+                            <div class="form-group">
+                                <label for="txt-entrega">Entrega: </label>
+                                <input type="checkbox" id="txt-entrega">
+                            </div>
+                        </p>
+
+                        <p>
+                            <div class="form-group">
+                                <label for="txt-entrega-parcial">Entrega Parcial: </label>
+                                <input type="checkbox" id="txt-entrega-parcial">
+                            </div>
+                        </p>
+
+                        <p>
+                            <div class="form-group">
+                                <label for="txt-observacion">Observacion: </label>
+                                <textarea id="txt-observacion" class="form-control"></textarea>
+                            </div>
+                        </p>
+>>>>>>> 4578a39b0c838a9a05ae87df315263180fd6b559
 
                             <div class="form-group">
                                 <label>Entrega Parcial:</label>
@@ -135,7 +165,11 @@
                         Cerrar
                     </button>
                     
+<<<<<<< HEAD
                     <button type="button" class="btn btn-primary" onclick="javascrit:GrabarTurno()">
+=======
+                    <button type="button" class="btn btn-primary" onclick="javascrit:GuardarTurno()">
+>>>>>>> 4578a39b0c838a9a05ae87df315263180fd6b559
                         <i class="fas fa-save"></i> 
                         Guardar
                     </button>
