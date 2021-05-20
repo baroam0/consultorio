@@ -1,6 +1,7 @@
 
 from datetime import datetime
 import json
+import pytz
 
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -10,6 +11,7 @@ from django.db.models import Q
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
+from django.utils.timezone import localtime
 
 from apps.obrassociales.models import ObraSocial
 from apps.pacientes.models import Paciente
@@ -46,6 +48,8 @@ def listadoturno(request):
         else:
             profesional = Profesional.objects.get(pk=request.GET.get("select_profesional_busqueda"))
             resultados = Turno.objects.filter(profesional=profesional)
+        for f in resultados:
+            print(f.fechahora)
         return render(
             request,
             'turnos/turno_list.html',
@@ -132,10 +136,40 @@ def nuevoturno(request):
 
 
 def cargaturnomodal(request,pk):
-    turno = Turno.objects.filter(pk=pk).prefetch_related('paciente').prefetch_related('obrasocial')
-    data = serializers.serialize('json', turno)
-    return JsonResponse(data, safe=False)
+
+    """
     
+    deals_utc = Deal.objects.filter(id=62).values("created_at")
+    deals_local = {"created_at": localtime(dt, tz) for dt in deals_utc.values()}
+    """
+    tz = pytz.timezone('America/Argentina/Buenos_Aires')
+
+    turno = Turno.objects.select_related('paciente').select_related('obrasocial').get(pk=pk)
+
+    print("****************************************")
+    #fechahora_parseada = turno.fechahora.strftime('%d/%m/%Y %H:%M')
+    #fechahora_parseada = localtime(turno.fechahora.strftime('%d/%m/%Y %H:%M'),tz) 
+    fechahora_parseada = localtime(turno.fechahora)
+
+    print(fechahora_parseada.strftime('%H:%M'))
+    print("---------------------------------------")
+
+    data = {
+        "turno_id": turno.pk,
+        "paciente_id": turno.paciente.id,
+        "paciente": str(turno.paciente.apellido) + "," + str(turno.paciente.nombre),
+        "fecha": fechahora_parseada.strftime('%d/%m/%Y'),
+        "hora": fechahora_parseada.strftime('%H:%M'),
+        "obrasocial_id": turno.obrasocial.pk,
+        "obrasocial": turno.obrasocial.descripcion,
+        "obrasocial_abreviatura": turno.obrasocial.abreviatura,
+        "asistio": turno.asistio,
+        "entrega": turno.entrega,
+        "entrega_parcial": turno.entrega_parcial,
+        "observacion": turno.observacion
+    }
+
+    return JsonResponse(data, safe=False)
 
 def ajax_editarturno(request, pk):
     return None

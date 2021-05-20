@@ -262,14 +262,43 @@
         }
 
         function CargaTurnoModal(id){
-            //$("#modal-turno").modal();
+            $("#modal-turno").modal();
 
             $.ajax({
                 type: "GET",
                 url: "/cargaturnomodal/" + id,
                 success: function (response) {
                     console.log(response);
+                    //$("#select_profesional_busqueda").val(response.turno_id);
+                    $("#modal-select-paciente").val(response.paciente_id);
+                    $('#modal-select-paciente').trigger('change'); 
+                    $("#reservationdate").find("input").val(response.fecha);
+                    $("#timepicker").find("input").val(response.hora);
+                    $("#modal-select-obrasocial").val(response.obrasocial_id);
+                    $('#modal-select-obrasocial').trigger('change'); 
+
+                    document.getElementById("modal-chk-asistio").checked = response.asistio;
+                    document.getElementById("modal-chk-entrega").checked = response.entrega;
+                    document.getElementById("modal-chk-entregaparcial").checked = response.entrega_parcial;
+
+                    $("#modal-observacion").val(response.observacion)
                 }
+
+                /*
+                "turno_id": turno.pk,
+                "paciente_id": turno.paciente.id,
+                "paciente": str(turno.paciente.apellido) + "," + str(turno.paciente.nombre),
+                "fecha": str(turno.fechahora.day) + "/" + str(turno.fechahora.month) + "/" + str(turno.fechahora.year),
+                "hora": str(turno.fechahora.hour) + ":" + str(turno.fechahora.minute),
+                "obrasocial_id": turno.obrasocial.pk,
+                "obrasocial": turno.obrasocial.descripcion,
+                "obrasocial_abreviatura": turno.obrasocial.abreviatura,
+                "asistio": turno.asistio,
+                "entrega": turno.entrega,
+                "entrega_parcial": turno.entrega_parcial,
+                "observacion": turno.observacion
+                */
+
             });
         }
 
