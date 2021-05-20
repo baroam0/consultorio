@@ -54,7 +54,7 @@
             <div class="modal-dialog modal-lg">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h4 class="modal-title">Nuevo Turno  <label id="lbl_profesional"></label></h4>
+                  <h4 class="modal-title">Nuevo Turno Para  <label id="lbl_profesional"></label></h4>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
@@ -108,17 +108,17 @@
 
                             <div class="form-group">
                                 <label>Asistio:</label>
-                                <input type="checkbox">
+                                <input type="checkbox" id="modal-chk-asistio">
                             </div>
 
                             <div class="form-group">
                                 <label>Entrega:</label>
-                                <input type="checkbox">
+                                <input type="checkbox" id="modal-chk-entrega">
                             </div>
 
                             <div class="form-group">
                                 <label>Entrega Parcial:</label>
-                                <input type="checkbox">
+                                <input type="checkbox" id="modal-chk-entregaparcial">
                             </div>
 
                             <div class="form-group">
@@ -203,31 +203,67 @@
                     var eventObj = info.event;
                     console.log(eventObj);
                     alert(eventObj.title);
+                    alert(eventObj.id);
                 },
             })
             calendar.render();
         });
 
-
         function GrabarTurno(){
+            var profesional_id = $("#select_profesional_busqueda").val();
             var paciente_id = $("#modal-select-paciente").val();
-            //var fecha = $("#reservationdate").data("datetimepicker").getDate();
-            //var fecha = $("#reservationdate").text();
             var fecha = $("#reservationdate").find("input").val();
             var hora = $("#timepicker").find("input").val();
+            var obrasocial = $("#modal-select-obrasocial").val();
 
-            console.log(hora);
-            //modal-select-paciente
-            //$('#reservationdate')
-            //reservationdate
-            //timepicker
+            var asistio = document.getElementById("modal-chk-asistio").checked;
+            var entrega = document.getElementById("modal-chk-entrega").checked;
+            var entregaparcial = document.getElementById("modal-chk-entregaparcial").checked;
+            var observacion = $("#modal-observacion").val()
+
+            if(fecha=="" || hora==""){
+                alert("Por favor ingrese una fecha/hora")
+            }else{
+                $.ajax({
+                    type: "POST",
+                    url: "/turnonuevo/",
+                    data: {
+                        "profesional_id": profesional_id,
+                        "paciente_id": paciente_id,
+                        "fecha": fecha,
+                        "hora": hora,
+                        "obrasocial": obrasocial,
+                        "asistio": asistio,
+                        "entrega": entrega,
+                        "entregaparcial": entregaparcial,
+                        "observacion": observacion
+                    },
+                    success: function (response) {
+                        if(response.status == 200){
+                            alert(response.mensaje);
+                            location.reload(true);
+                        }else{
+                            alert(response.mensaje)
+                        }
+                        
+                    }
+                });
+            }
         }
-
 
         function ModificarTurno(id){
             $("#modal-turno").modal();
-        }
 
+            $.ajax({
+                type: "method",
+                url: "url",
+                data: "data",
+                dataType: "dataType",
+                success: function (response) {
+                    
+                }
+            });
+        }
 
         function NuevoTurno(){
             if($("#select_profesional_busqueda").val()==0){
@@ -245,10 +281,7 @@
             var urlParams = new URLSearchParams(queryString);
             var parametroprofesional = urlParams.get('select_profesional_busqueda');
             return parametroprofesional;
-            
         }
-
-        
 
     </script>
 
