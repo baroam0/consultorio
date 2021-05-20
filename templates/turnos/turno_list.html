@@ -106,55 +106,34 @@
                                 </select>
                             </div>
 
-<<<<<<< HEAD
+                        <p>
                             <div class="form-group">
-                                <label>Asistio:</label>
+                                <label for="modal-chk-asistio">Asistio:</label>
                                 <input type="checkbox" id="modal-chk-asistio">
                             </div>
+                        </p>
 
+                        <p>
                             <div class="form-group">
-                                <label>Entrega:</label>
+                                <label for="modal-chk-entrega">Entrega: </label>
                                 <input type="checkbox" id="modal-chk-entrega">
                             </div>
-=======
-                        <p>
-                            <div class="form-group">
-                                <label for="txt-asistio">Asistio:</label>
-                                <input type="checkbox" id="txt-asistio">
-                            </div>
                         </p>
 
                         <p>
                             <div class="form-group">
-                                <label for="txt-entrega">Entrega: </label>
-                                <input type="checkbox" id="txt-entrega">
-                            </div>
-                        </p>
-
-                        <p>
-                            <div class="form-group">
-                                <label for="txt-entrega-parcial">Entrega Parcial: </label>
-                                <input type="checkbox" id="txt-entrega-parcial">
-                            </div>
-                        </p>
-
-                        <p>
-                            <div class="form-group">
-                                <label for="txt-observacion">Observacion: </label>
-                                <textarea id="txt-observacion" class="form-control"></textarea>
-                            </div>
-                        </p>
->>>>>>> 4578a39b0c838a9a05ae87df315263180fd6b559
-
-                            <div class="form-group">
-                                <label>Entrega Parcial:</label>
+                                <label for="modal-chk-entregaparcial">Entrega Parcial: </label>
                                 <input type="checkbox" id="modal-chk-entregaparcial">
                             </div>
+                        </p>
 
+                        <p>
                             <div class="form-group">
-                                <label for="modal-observacion">Observacion:</label>
+                                <label for="modal-observacion">Observacion: </label>
                                 <textarea id="modal-observacion" class="form-control"></textarea>
                             </div>
+                        </p>
+
                     </form>
 
                 </div>
@@ -165,11 +144,7 @@
                         Cerrar
                     </button>
                     
-<<<<<<< HEAD
                     <button type="button" class="btn btn-primary" onclick="javascrit:GrabarTurno()">
-=======
-                    <button type="button" class="btn btn-primary" onclick="javascrit:GuardarTurno()">
->>>>>>> 4578a39b0c838a9a05ae87df315263180fd6b559
                         <i class="fas fa-save"></i> 
                         Guardar
                     </button>
@@ -236,8 +211,9 @@
                 eventClick: function(info) {
                     var eventObj = info.event;
                     console.log(eventObj);
-                    alert(eventObj.title);
-                    alert(eventObj.id);
+                    //alert(eventObj.title);
+                    //alert(eventObj.id);
+                    CargaTurnoModal(eventObj.id);
                 },
             })
             calendar.render();
@@ -285,16 +261,14 @@
             }
         }
 
-        function ModificarTurno(id){
-            $("#modal-turno").modal();
+        function CargaTurnoModal(id){
+            //$("#modal-turno").modal();
 
             $.ajax({
-                type: "method",
-                url: "url",
-                data: "data",
-                dataType: "dataType",
+                type: "GET",
+                url: "/cargaturnomodal/" + id,
                 success: function (response) {
-                    
+                    console.log(response);
                 }
             });
         }

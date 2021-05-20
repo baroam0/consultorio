@@ -17,7 +17,7 @@ class Turno(models.Model):
     observacion = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return str(self.fechahora)
+        return str(self.pk)
     
     class Meta:
         verbose_name_plural = "Turnos"

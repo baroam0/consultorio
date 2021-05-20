@@ -1,11 +1,13 @@
 
 from datetime import datetime
+import json
 
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.core import serializers
 from django.core.paginator import Paginator
 from django.db.models import Q
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect
 
@@ -104,10 +106,6 @@ def nuevoturno(request):
     
     valor = validaturno(fecha_hora_obj,paciente,profesional)
 
-    print("************************************")
-    print(valor)
-    print("************************************")
-
     if valor == 0:
         turno = Turno(
             fechahora = fecha_hora_obj,
@@ -129,11 +127,19 @@ def nuevoturno(request):
             "status": 400,
             "mensaje": "El Turno no esta disponible"
         }
-    
+
     return JsonResponse(data)
+
+
+def cargaturnomodal(request,pk):
+    turno = Turno.objects.filter(pk=pk).prefetch_related('paciente').prefetch_related('obrasocial')
+    data = serializers.serialize('json', turno)
+    return JsonResponse(data, safe=False)
+    
 
 def ajax_editarturno(request, pk):
     return None
+
 
 def editarturno(request, pk):
     return None
