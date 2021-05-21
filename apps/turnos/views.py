@@ -21,13 +21,24 @@ from apps.turnos.models import Turno
 
 
 def validaturno(fecha_hora,paciente,profesional):
-    
     try:
         consulta = Turno.objects.get(
             fechahora = fecha_hora,
-            paciente = paciente,
             profesional = profesional
         )
+        return 1
+    except:
+        return 0
+
+
+def validaturnoedicion(turno_id,fecha_hora,paciente,profesional):
+    try:
+        consulta = Turno.objects.get(
+            fechahora = fecha_hora,
+            profesional = profesional
+        ).exclude(pk=turno_id)
+        print("***********************************")
+        print(consulta)
         return 1
     except:
         return 0
@@ -136,28 +147,15 @@ def nuevoturno(request):
 
 
 def cargaturnomodal(request,pk):
-
-    """
-    
-    deals_utc = Deal.objects.filter(id=62).values("created_at")
-    deals_local = {"created_at": localtime(dt, tz) for dt in deals_utc.values()}
-    """
     tz = pytz.timezone('America/Argentina/Buenos_Aires')
-
-    turno = Turno.objects.select_related('paciente').select_related('obrasocial').get(pk=pk)
-
-    print("****************************************")
-    #fechahora_parseada = turno.fechahora.strftime('%d/%m/%Y %H:%M')
-    #fechahora_parseada = localtime(turno.fechahora.strftime('%d/%m/%Y %H:%M'),tz) 
+    turno = Turno.objects.select_related('paciente').select_related('obrasocial').select_related('profesional').get(pk=pk)
     fechahora_parseada = localtime(turno.fechahora)
-
-    print(fechahora_parseada.strftime('%H:%M'))
-    print("---------------------------------------")
 
     data = {
         "turno_id": turno.pk,
         "paciente_id": turno.paciente.id,
         "paciente": str(turno.paciente.apellido) + "," + str(turno.paciente.nombre),
+        "profesional_id": turno.profesional.pk,
         "fecha": fechahora_parseada.strftime('%d/%m/%Y'),
         "hora": fechahora_parseada.strftime('%H:%M'),
         "obrasocial_id": turno.obrasocial.pk,
@@ -171,12 +169,78 @@ def cargaturnomodal(request,pk):
 
     return JsonResponse(data, safe=False)
 
-def ajax_editarturno(request, pk):
-    return None
 
 
+@csrf_exempt
 def editarturno(request, pk):
-    return None
+    turno = Turno.objects.get(pk=pk)
+
+    profesional = request.POST["profesional_id"]
+    paciente = request.POST["paciente_id"]
+    fecha = request.POST["fecha"]
+    hora = request.POST["hora"]
+    obrasocial = request.POST["obrasocial"]
+    asistio = request.POST["asistio"]
+    entrega = request.POST["entrega"]
+    entregaparcial = request.POST["entregaparcial"]
+    observacion = request.POST["observacion"]
+
+    fecha_hora = str(fecha) + " " + str(hora)
+
+    fecha_hora_obj = datetime.strptime(fecha_hora, '%d/%m/%Y %H:%M')
+
+    obrasocial = ObraSocial.objects.get(pk=obrasocial)
+    paciente = Paciente.objects.get(pk=paciente)
+    profesional = Profesional.objects.get(pk=profesional)
+
+    if asistio == "false":
+        asistio = False
+    else:
+        asistio = True
+
+    if entrega == "false":
+        entrega = False
+    else:
+        entrega = True
+
+    if entregaparcial == "false":
+        entregaparcial = False
+    else:
+        entregaparcial = True
+
+    valor = validaturnoedicion(turno.pk,fecha_hora_obj,paciente,profesional)
+
+    print(valor)
+
+    if valor == 0:
+        print(turno)
+        print("*******************************")
+        obrasocial = ObraSocial.objects.get(pk=obrasocial)
+        paciente = Paciente.objects.get(pk=paciente)
+        profesional = Profesional.objects.get(pk=profesional)
+
+        turno.fechahora = fecha_hora_obj
+        turno.paciente = paciente
+        turno.profesional = profesional
+        turno.obrasocial = obrasocial
+        turno.asistio = asistio
+        turno.entrega = entrega,
+        turno.entrega_parcial = entregaparcial,
+        turno.observacion = observacion
+        turno.save()
+
+        data = {
+            "status": 200,
+            "mensaje": "El turno se ha guardado"
+        }
+    else:
+        data = {
+            "status": 400,
+            "mensaje": "El Turno no esta disponible"
+        }
+
+    return JsonResponse(data)
+
 
 
 # Create your views here.
