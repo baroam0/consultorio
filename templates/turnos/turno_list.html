@@ -205,7 +205,8 @@
                         {
                             id: '{{r.pk}}',
                             title: '{{r.paciente}}',
-                            start: '{{r.fechahora.isoformat}}'
+                            start: '{{r.fechahora.isoformat}}',
+                            end: '{{r.fechahora.isoformat}}'
                         },
                     {% endfor %}
                 ],  
@@ -223,7 +224,7 @@
 
         function GrabarTurno(){
             if(editar==true){
-                editar = false;
+                
                 var profesional_id = $("#select_profesional_busqueda").val();
                 var paciente_id = $("#modal-select-paciente").val();
                 var fecha = $("#reservationdate").find("input").val();
@@ -255,7 +256,9 @@
                         success: function (response) {
                             console.log(editar);
                             if(response.status==200){
+                                editar = false;
                                 alert("Se ha actualizado el turno");
+                                location.reload(true);
                             }else{
                                 alert("El turno no esta disponible");
                             }

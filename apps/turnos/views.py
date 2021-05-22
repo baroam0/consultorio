@@ -32,15 +32,14 @@ def validaturno(fecha_hora,paciente,profesional):
 
 
 def validaturnoedicion(turno_id,fecha_hora,paciente,profesional):
-    try:
-        consulta = Turno.objects.get(
-            fechahora = fecha_hora,
-            profesional = profesional
-        ).exclude(pk=turno_id)
-        print("***********************************")
-        print(consulta)
+    
+    consulta = Turno.objects.filter(
+        fechahora = fecha_hora,
+        profesional = profesional
+    ).exclude(pk=turno_id)
+    if consulta:
         return 1
-    except:
+    else:
         return 0
 
 
@@ -213,22 +212,15 @@ def editarturno(request, pk):
     print(valor)
 
     if valor == 0:
-        print(turno)
-        print("*******************************")
-        obrasocial = ObraSocial.objects.get(pk=obrasocial)
-        paciente = Paciente.objects.get(pk=paciente)
-        profesional = Profesional.objects.get(pk=profesional)
-
         turno.fechahora = fecha_hora_obj
         turno.paciente = paciente
         turno.profesional = profesional
         turno.obrasocial = obrasocial
         turno.asistio = asistio
-        turno.entrega = entrega,
-        turno.entrega_parcial = entregaparcial,
+        turno.entrega = entrega
+        turno.entrega_parcial = entregaparcial
         turno.observacion = observacion
         turno.save()
-
         data = {
             "status": 200,
             "mensaje": "El turno se ha guardado"
@@ -238,9 +230,7 @@ def editarturno(request, pk):
             "status": 400,
             "mensaje": "El Turno no esta disponible"
         }
-
     return JsonResponse(data)
-
 
 
 # Create your views here.
