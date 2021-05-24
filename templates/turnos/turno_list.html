@@ -20,7 +20,7 @@
                 </div>
                 <div class="col-4">
                     <select class='form-control' id='select_profesional_busqueda' name='select_profesional_busqueda'>
-                        <option value=0> Todos</option>
+                        <option value=0> Selecciona Profesional</option>
                         {% for profesional in profesionales %}
                             <option value={{profesional.pk}}>
                                 {{profesional.usuario.last_name}}, {{profesional.usuario.first_name}}

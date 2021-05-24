@@ -54,7 +54,8 @@ def listadoturno(request):
 
     if "select_profesional_busqueda" in request.GET:
         if int(request.GET.get("select_profesional_busqueda")) == 0:
-            resultados = Turno.objects.all()
+            #resultados = Turno.objects.all()
+            resultados = None
         else:
             profesional = Profesional.objects.get(pk=request.GET.get("select_profesional_busqueda"))
             resultados = Turno.objects.filter(profesional=profesional)
