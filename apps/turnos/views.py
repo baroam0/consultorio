@@ -1,22 +1,16 @@
 
 from datetime import datetime
-import json
+
 import pytz
 
-from django.contrib import messages
-from django.contrib.auth.models import User
-from django.core import serializers
-from django.core.paginator import Paginator
-from django.db.models import Q
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.utils.timezone import localtime
 
 from apps.obrassociales.models import ObraSocial
 from apps.pacientes.models import Paciente
 from apps.profesionales.models import Profesional
-from apps.turnos.forms import TurnoForm
 from apps.turnos.models import Turno
 
 

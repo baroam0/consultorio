@@ -22,7 +22,7 @@ from apps.bancos.views import listadodatosbancarios, nuevodatobancario, editarda
 
 from apps.catalogosenfermedades.views import ajaxcatalogo
 
-from apps.estadisticas.views import estadisticaobrasocialmes
+from apps.estadisticas.views import estadisticaobrasocialmes, estadisticaconsultatotalturnos
 
 from apps.obrassociales.views import editarobrasocial, nuevaobrasocial, \
     obrasociallistado, prestacionlistado, nuevaprestacion, editarprestacion, \
@@ -79,4 +79,5 @@ urlpatterns = [
     path('turnoeditar/<int:pk>/', editarturno),
     path('cargaturnomodal/<int:pk>/', cargaturnomodal),
     path('estadisticaobrasocialmes/', estadisticaobrasocialmes),
+    path('estadisticaconsultatotalturnos/', estadisticaconsultatotalturnos),
 ]

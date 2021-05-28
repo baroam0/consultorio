@@ -92,20 +92,17 @@
 <div class="col-md-12">
   <div class="card">
     <div class="card-header">
-      <h3 class="card-title">Tunos Asistidos</h3>
+      <h3 class="card-title">Turnos Otorgados</h3>
 
       <div class="card-tools">
       </div>
     </div>
     <!-- /.card-header -->
     <div class="card-body p-0">
-      <table class="table">
+      <table class="table" id="table-turnosotorgados">
         <thead>
           <tr>
-            <th style="width: 10px">#</th>
-            <th>Apellido y Nombre</th>
-            <th>Fecha</th>
-            <th>Entregados</th>
+            <th>Cantidad</th>
           </tr>
         </thead>
         <tbody>
@@ -118,6 +115,84 @@
 </div>
 
 
+<div class="col-md-12">
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Tunos Asistidos</h3>
+
+      <div class="card-tools">
+      </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body p-0">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Cantidad</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+    <!-- /.card-body -->
+  </div>
+  <!-- /.card -->
+</div>
+
+<div class="col-md-12">
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Tunos con Entrega de Orden</h3>
+
+      <div class="card-tools">
+      </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body p-0">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Cantidad</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+    <!-- /.card-body -->
+  </div>
+  <!-- /.card -->
+</div>
+
+<div class="col-md-12">
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Tunos con Entrega Parcial</h3>
+
+      <div class="card-tools">
+      </div>
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body p-0">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Cantidad</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+    <!-- /.card-body -->
+  </div>
+  <!-- /.card -->
+</div>
+
 {% endblock %}
 
 
@@ -127,10 +202,35 @@
       //$("#select-obrasocial").select2();
     });
 
-    function Cargartablas(obrasocial, profesional, mes, anio){
+    function TotalTurnosOtorgados(obrasocial, profesional, mes, anio){
+      $.ajax({
+        type: "GET",
+        url: "/estadisticaconsultatotalturnos/",
+        data: {
+          "obrasocial": obrasocial,
+          "profesional": profesional,
+          "mes": mes,
+          "anio": anio,
+        },
+        success: function (response) {
+          $("#table-turnosotorgados tbody").html('');
+          var newRowContent = "<tr><td>" + response + "</td></tr>";
 
+          $("#table-turnosotorgados tbody").append(newRowContent);
+
+        }
+      });
     }
 
+    $("#select-obrasocial").change(function() {
+      var obrasocial = $("#select-obrasocial").val();
+      var profesional = $("#select-profesional").val();
+      var mes = $("#select-mes").val();
+      var anio = $("#select-anio").val();
+
+      var datos = TotalTurnosOtorgados(obrasocial,profesional,mes,anio);
+
+    });
 
   </script>
 {% endblock %}
