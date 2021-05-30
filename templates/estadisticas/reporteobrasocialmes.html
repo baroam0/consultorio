@@ -200,7 +200,35 @@
 
     });
 
+    $("#select-profesional").change(function() {
+      var obrasocial = $("#select-obrasocial").val();
+      var profesional = $("#select-profesional").val();
+      var mes = $("#select-mes").val();
+      var anio = $("#select-anio").val();
 
+      TotalTurnos(obrasocial,profesional,mes,anio);
+
+    });
+
+    $("#select-mes").change(function() {
+      var obrasocial = $("#select-obrasocial").val();
+      var profesional = $("#select-profesional").val();
+      var mes = $("#select-mes").val();
+      var anio = $("#select-anio").val();
+
+      TotalTurnos(obrasocial,profesional,mes,anio);
+
+    });
+
+    $("#select-anio").change(function() {
+      var obrasocial = $("#select-obrasocial").val();
+      var profesional = $("#select-profesional").val();
+      var mes = $("#select-mes").val();
+      var anio = $("#select-anio").val();
+
+      TotalTurnos(obrasocial,profesional,mes,anio);
+
+    });
 
   </script>
 {% endblock %}
