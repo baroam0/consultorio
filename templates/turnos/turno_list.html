@@ -206,14 +206,18 @@
                             id: '{{r.pk}}',
                             title: '{{r.paciente}}',
                             start: '{{r.fechahora.isoformat}}',
-                            end: '{{r.fechahora.isoformat}}'
+                            end: '{{r.fechahora.isoformat}}',
+                            {% if r.entrega == True %}
+                                backgroundColor: 'light blue'
+                            {% else %}
+                                backgroundColor: 'red'
+                            {% endif %}
                         },
                     {% endfor %}
-                ],  
+                ],             
 
                 eventClick: function(info) {
                     var eventObj = info.event;
-                    console.log(eventObj);
                     //alert(eventObj.title);
                     //alert(eventObj.id);
                     CargaTurnoModal(eventObj.id);

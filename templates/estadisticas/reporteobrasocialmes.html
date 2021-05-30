@@ -92,20 +92,23 @@
 <div class="col-md-12">
   <div class="card">
     <div class="card-header">
-      <h3 class="card-title">Tunos Asistidos</h3>
+      <h3 class="card-title">Detalle General Turnos Otorgados</h3>
+
+      
 
       <div class="card-tools">
+        <button type="button" class="btn btn-default" title="Imprimir listado!" onclick="javascrit:exportTableToExcel()">
+          <i class="fas fa-file-excel"></i>
+        </button>
       </div>
     </div>
     <!-- /.card-header -->
     <div class="card-body p-0">
-      <table class="table">
+      <table class="table" id="table-turnosotorgados">
         <thead>
           <tr>
-            <th style="width: 10px">#</th>
-            <th>Apellido y Nombre</th>
-            <th>Fecha</th>
-            <th>Entregados</th>
+            <th>Detalle</th>
+            <th>Cantidad</th>
           </tr>
         </thead>
         <tbody>
@@ -125,9 +128,78 @@
       //$("#select-obrasocial").select2();
     });
 
-    function Cargartablas(obrasocial, profesional, mes, anio){
 
+    function TotalTurnos(obrasocial, profesional, mes, anio){
+      $.ajax({
+        type: "GET",
+        url: "/estadisticaconsultatotalturnos/",
+        data: {
+          "obrasocial": obrasocial,
+          "profesional": profesional,
+          "mes": mes,
+          "anio": anio,
+        },
+        success: function (response) {
+          $("#table-turnosotorgados tbody").html('');
+          var newRowContent = "";
+          $.each(response, function (indexInArray, valueOfElement) { 
+            
+            newRowContent = "<tr><td> Turnos Otorgados</td><td>" + response.turnosotorgados + "</td></tr>"; 
+            newRowContent = newRowContent + "<tr><td> Turnos Asistidos</td><td>" + response.turnosasistidos + "</td></tr>";
+            newRowContent = newRowContent + "<tr><td> Turnos Con Entrega de Orden </td><td>" + response.turnosentregas + "</td></tr>";
+            newRowContent = newRowContent + "<tr><td> Turnos Con Entrega Parcial </td><td>" + response.turnosentregaparcial + "</td></tr>";
+            newRowContent = newRowContent + "<tr><td> Turnos Sin Entrega </td><td>" + response.turnossinorden + "</td></tr>";
+            newRowContent = newRowContent + "<tr><td> Turnos Inasistidos </td><td>" + response.turnosinasistidos + "</td></tr>";
+          });
+          $("#table-turnosotorgados tbody").append(newRowContent);
+        }
+      });
     }
+
+
+    function exportTableToExcel(filename = ''){
+            //var tableID = document.getElementById("tablaDatos");
+            
+            var downloadLink;
+            var dataType = 'application/vnd.ms-excel';
+            var tableSelect = document.getElementById("table-turnosotorgados");
+            var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+    
+            // Specify file name
+            filename = filename?filename+'.xls':'excel_data.xls';
+    
+            // Create download link element
+            downloadLink = document.createElement("a");
+    
+            document.body.appendChild(downloadLink);
+    
+            if(navigator.msSaveOrOpenBlob){
+                var blob = new Blob(['ufeff', tableHTML], {
+                    type: dataType
+                });
+                navigator.msSaveOrOpenBlob( blob, filename);
+            }else{
+                // Create a link to the file
+                downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+    
+                // Setting the file name
+                downloadLink.download = filename;
+        
+                //triggering the function
+                downloadLink.click();
+            }
+        }
+
+    $("#select-obrasocial").change(function() {
+      var obrasocial = $("#select-obrasocial").val();
+      var profesional = $("#select-profesional").val();
+      var mes = $("#select-mes").val();
+      var anio = $("#select-anio").val();
+
+      TotalTurnos(obrasocial,profesional,mes,anio);
+
+    });
+
 
 
   </script>
