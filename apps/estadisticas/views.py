@@ -1,9 +1,9 @@
 
+import json
+from datetime import datetime
 
-from django.db.models import Count
-from django.core import serializers
 from django.http import JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponse
 
 from apps.obrassociales.models import ObraSocial
 from apps.profesionales.models import Profesional
@@ -36,6 +36,38 @@ def estadisticaobrasocialmes(request):
             'profesionales': profesionales
         })
 
+
+def estadisticaconsultapacientemes(request):
+
+    if request.method=="GET":
+        obrasocial = ObraSocial.objects.get(pk=request.GET.get("obrasocial"))
+        profesional = Profesional.objects.get(pk=request.GET.get("profesional"))
+        mes = request.GET.get("mes")
+        anio = request.GET.get("anio")
+
+        lista = list()
+
+        turnos = Turno.objects.select_related("paciente").filter(
+            fechahora__month=mes,
+            fechahora__year=anio,
+            obrasocial = obrasocial,
+            profesional = profesional,
+            asistio=True
+        )
+
+        for turno in turnos:
+            lista.append({
+                "paciente": str(turno.paciente),
+                "fecha": turno.fechahora.strftime("%d/%m/%Y"),
+                "obrasocial": str(turno.obrasocial),
+                "profesional": str(turno.profesional)
+            })
+        print(lista)
+
+        #return JsonResponse(lista, safe=False)
+        data_json = json.dumps(lista)
+        return HttpResponse(data_json, 'application/json')
+ 
 
 def estadisticaconsultatotalturnos(request):
     if request.method=="GET":

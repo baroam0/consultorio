@@ -108,8 +108,10 @@
       <table class="table" id="table-turnosotorgados">
         <thead>
           <tr>
-            <th>Detalle</th>
-            <th>Cantidad</th>
+            <th>Paciente</th>
+            <th>Fecha</th>
+            <th>Obra Social </th>
+            <th>Profesional </th>
           </tr>
         </thead>
         <tbody>
@@ -133,7 +135,7 @@
     function TotalTurnos(obrasocial, profesional, mes, anio){
       $.ajax({
         type: "GET",
-        url: "/estadisticaconsultatotalturnos/",
+        url: "/estadisticaconsultapacientemes/",
         data: {
           "obrasocial": obrasocial,
           "profesional": profesional,
@@ -144,15 +146,15 @@
           $("#table-turnosotorgados tbody").html('');
           var newRowContent = "";
           $.each(response, function (indexInArray, valueOfElement) { 
-            
-            newRowContent = "<tr><td> Turnos Otorgados</td><td>" + response.turnosotorgados + "</td></tr>"; 
-            newRowContent = newRowContent + "<tr><td> Turnos Asistidos</td><td>" + response.turnosasistidos + "</td></tr>";
-            newRowContent = newRowContent + "<tr><td> Turnos Con Entrega de Orden </td><td>" + response.turnosentregas + "</td></tr>";
-            newRowContent = newRowContent + "<tr><td> Turnos Con Entrega Parcial </td><td>" + response.turnosentregaparcial + "</td></tr>";
-            newRowContent = newRowContent + "<tr><td> Turnos Sin Entrega </td><td>" + response.turnossinorden + "</td></tr>";
-            newRowContent = newRowContent + "<tr><td> Turnos Inasistidos </td><td>" + response.turnosinasistidos + "</td></tr>";
+            console.log(valueOfElement['paciente']);
+            newRowContent = "<tr><td>" + valueOfElement['paciente'] + "</td></tr>"; 
+            newRowContent = newRowContent + "<tr><td>" + valueOfElement['fecha'] + "</td></tr>"; 
+            newRowContent = newRowContent + "<tr><td>" + valueOfElement['obrasocial'] + "</td></tr>"; 
+            newRowContent = newRowContent + "<tr><td>" + valueOfElement['profesional'] + "</td></tr>"; 
+            /*newRowContent = newRowContent + "<tr><td> Turnos Asistidos</td><td>" + response.turnosasistidos + "</td></tr>";*/
+            $("#table-turnosotorgados tbody").append(newRowContent);
           });
-          $("#table-turnosotorgados tbody").append(newRowContent);
+          
         }
       });
     }
