@@ -199,6 +199,15 @@
                 </li>
               </ul>
 
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="/estadisticapacientemes/" class="nav-link">
+                    <i class="fas fa-address-card nav-icon"></i>
+                    <p>Atenciones por Paciente</p>
+                  </a>
+                </li>
+              </ul>
+
             </li>
 
           </li>
@@ -242,11 +251,9 @@
     {% if cumplepaciente %}
       {%for dato in cumplepaciente %}
         
-          
             <div class="alert alert-secondary" role="alert">
                 Hoy es el cumple de {{dato.apellido.upper}}, {{dato.nombre.upper}} - {{dato.telefono}}
             </div>
-          
         
       {% endfor %}
     {% endif %}

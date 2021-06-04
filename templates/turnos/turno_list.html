@@ -207,11 +207,17 @@
                             title: '{{r.paciente}}',
                             start: '{{r.fechahora.isoformat}}',
                             end: '{{r.fechahora.isoformat}}',
-                            {% if r.entrega == True %}
-                                backgroundColor: 'light blue'
+
+                            {% if r.asistio == True %}
+                                {% if r.entrega == True%}
+                                    backgroundColor: 'light blue',
+                                {% else %}
+                                    backgroundColor: 'orange',
+                                {% endif %}
                             {% else %}
-                                backgroundColor: 'red'
+                                backgroundColor: 'red',
                             {% endif %}
+
                         },
                     {% endfor %}
                 ],             

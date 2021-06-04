@@ -10,8 +10,18 @@ from apps.profesionales.models import Profesional
 from apps.turnos.models import Turno
 
 
-def estadisticaasistencial(request):
-    return render(request, 'estadisticas/estadistica_obrasocial.html')
+def estadisticapacientemes(request):
+    obrassociales = ObraSocial.objects.all().order_by("abreviatura")
+    profesionales = Profesional.objects.all()
+
+    return render(
+        request,
+        'estadisticas/reportepacientemes.html',
+        {
+            'obrassociales': obrassociales,
+            'profesionales': profesionales
+        }
+    )
 
 
 def estadisticaobrasocialmes(request):
