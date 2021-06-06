@@ -144,14 +144,12 @@
         },
         success: function (response) {
           $("#table-turnosotorgados tbody").html('');
-          var newRowContent = "";
+          var newRowContent = "<tr>";
           $.each(response, function (indexInArray, valueOfElement) { 
-            console.log(valueOfElement['paciente']);
-            newRowContent = "<tr><td>" + valueOfElement['paciente'] + "</td></tr>"; 
-            newRowContent = newRowContent + "<tr><td>" + valueOfElement['fecha'] + "</td></tr>"; 
-            newRowContent = newRowContent + "<tr><td>" + valueOfElement['obrasocial'] + "</td></tr>"; 
-            newRowContent = newRowContent + "<tr><td>" + valueOfElement['profesional'] + "</td></tr>"; 
-            /*newRowContent = newRowContent + "<tr><td> Turnos Asistidos</td><td>" + response.turnosasistidos + "</td></tr>";*/
+            newRowContent = "<tr><td>" + valueOfElement['paciente'] + "</td>"; 
+            newRowContent = newRowContent + "<td>" + valueOfElement['fecha'] + "</td>"; 
+            newRowContent = newRowContent + "<td>" + valueOfElement['obrasocial'] + "</td>"; 
+            newRowContent = newRowContent + "<td>" + valueOfElement['profesional'] + "</td>"; 
             $("#table-turnosotorgados tbody").append(newRowContent);
           });
           

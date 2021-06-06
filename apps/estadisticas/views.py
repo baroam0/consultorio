@@ -55,14 +55,22 @@ def estadisticaconsultapacientemes(request):
             asistio=True
         )
 
+        cant = Turno.objects.select_related("paciente").filter(
+            fechahora__month=mes,
+            fechahora__year=anio,
+            obrasocial = obrasocial,
+            profesional = profesional,
+            asistio=True
+        ).count()
+
         for turno in turnos:
             lista.append({
                 "paciente": str(turno.paciente),
                 "fecha": turno.fechahora.strftime("%d/%m/%Y"),
-                "obrasocial": str(turno.obrasocial),
-                "profesional": str(turno.profesional)
+                "obrasocial": str(turno.obrasocial.abreviatura),
+                "profesional": str(turno.profesional),
+                "cantidad": cant
             })
-        print(lista)
 
         #return JsonResponse(lista, safe=False)
         data_json = json.dumps(lista)
