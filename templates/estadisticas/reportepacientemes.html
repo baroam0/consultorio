@@ -10,15 +10,6 @@
       <h3>Informe Pacientes por Mes</h3>
 
       <!--div class="card-tools"-->
-        
-        <label for="select-obrasocial">Obra Social: </label>
-        <select class="form-control" id="select-obrasocial">
-          {% for obrasocial in obrassociales%}
-            <option value={{obrasocial.pk}}>
-              {{obrasocial.abreviatura.upper}}
-            </option>
-          {% endfor %}
-        </select>
 
         <label for="select-profesional">Profesional: </label>
           <select class="form-control" id="select-profesional">
@@ -132,12 +123,11 @@
     });
 
 
-    function TotalTurnos(obrasocial, profesional, mes, anio){
+    function TotalTurnos(profesional, mes, anio){
       $.ajax({
         type: "GET",
         url: "/estadisticaconsultapacientemes/",
         data: {
-          "obrasocial": obrasocial,
           "profesional": profesional,
           "mes": mes,
           "anio": anio,
@@ -191,43 +181,30 @@
             }
         }
 
-    $("#select-obrasocial").change(function() {
-      var obrasocial = $("#select-obrasocial").val();
-      var profesional = $("#select-profesional").val();
-      var mes = $("#select-mes").val();
-      var anio = $("#select-anio").val();
-
-      TotalTurnos(obrasocial,profesional,mes,anio);
-
-    });
-
     $("#select-profesional").change(function() {
-      var obrasocial = $("#select-obrasocial").val();
       var profesional = $("#select-profesional").val();
       var mes = $("#select-mes").val();
       var anio = $("#select-anio").val();
 
-      TotalTurnos(obrasocial,profesional,mes,anio);
+      TotalTurnos(profesional,mes,anio);
 
     });
 
     $("#select-mes").change(function() {
-      var obrasocial = $("#select-obrasocial").val();
       var profesional = $("#select-profesional").val();
       var mes = $("#select-mes").val();
       var anio = $("#select-anio").val();
 
-      TotalTurnos(obrasocial,profesional,mes,anio);
+      TotalTurnos(profesional,mes,anio);
 
     });
 
     $("#select-anio").change(function() {
-      var obrasocial = $("#select-obrasocial").val();
       var profesional = $("#select-profesional").val();
       var mes = $("#select-mes").val();
       var anio = $("#select-anio").val();
 
-      TotalTurnos(obrasocial,profesional,mes,anio);
+      TotalTurnos(profesional,mes,anio);
 
     });
 

@@ -40,7 +40,6 @@ def estadisticaobrasocialmes(request):
 def estadisticaconsultapacientemes(request):
 
     if request.method=="GET":
-        obrasocial = ObraSocial.objects.get(pk=request.GET.get("obrasocial"))
         profesional = Profesional.objects.get(pk=request.GET.get("profesional"))
         mes = request.GET.get("mes")
         anio = request.GET.get("anio")
@@ -50,18 +49,9 @@ def estadisticaconsultapacientemes(request):
         turnos = Turno.objects.select_related("paciente").filter(
             fechahora__month=mes,
             fechahora__year=anio,
-            obrasocial = obrasocial,
             profesional = profesional,
             asistio=True
         )
-
-        cant = Turno.objects.select_related("paciente").filter(
-            fechahora__month=mes,
-            fechahora__year=anio,
-            obrasocial = obrasocial,
-            profesional = profesional,
-            asistio=True
-        ).count()
 
         for turno in turnos:
             lista.append({
@@ -69,7 +59,6 @@ def estadisticaconsultapacientemes(request):
                 "fecha": turno.fechahora.strftime("%d/%m/%Y"),
                 "obrasocial": str(turno.obrasocial.abreviatura),
                 "profesional": str(turno.profesional),
-                "cantidad": cant
             })
 
         #return JsonResponse(lista, safe=False)
