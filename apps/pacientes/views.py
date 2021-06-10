@@ -41,18 +41,23 @@ def listadopaciente(request):
             ).filter(profesional_tratante=usuarioprofesional).order_by('apellido')
             #consulta = consulta.filter(profesional_tratante=usuarioprofesional)            
     else:
+        parametro = ""
         if usuario.is_staff:
             consulta = Paciente.objects.all().order_by('apellido')
         else:
             consulta = Paciente.objects.filter(profesional_tratante=usuarioprofesional).order_by('apellido')
 
-    paginador = Paginator(consulta, 20)
+    paginador = Paginator(consulta, 25)
     if "page" in request.GET:
         page = request.GET.get('page')
     else:
         page = 1
     resultados = paginador.get_page(page)
-    return render(request, 'pacientes/paciente_list.html', {'resultados': resultados})
+
+    if parametro != "":
+        return render(request, 'pacientes/paciente_list.html', {'resultados': resultados, 'parametro': parametro})
+    else:
+        return render(request, 'pacientes/paciente_list.html', {'resultados': resultados})
 
 
 def nuevopaciente(request):
