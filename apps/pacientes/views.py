@@ -30,13 +30,14 @@ def listadopaciente(request):
         if usuario.is_staff:
             consulta = Paciente.objects.filter(
                 Q(apellido__icontains=parametro) |
-                Q(nombre__contains=parametro)
+                Q(nombre__contains=parametro) |
+                Q(ocupacion__contains=parametro)
             ).order_by('apellido')
         else:
             consulta = Paciente.objects.filter(
                 Q(apellido__icontains=parametro) |
                 Q(nombre__contains=parametro) |
-                Q(ocupacion__icontains=parametro)
+                Q(ocupacion__contains=parametro)
             ).filter(profesional_tratante=usuarioprofesional).order_by('apellido')
             #consulta = consulta.filter(profesional_tratante=usuarioprofesional)            
     else:
