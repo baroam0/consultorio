@@ -68,7 +68,7 @@ def listadopaciente(request):
         else:
             consulta = Paciente.objects.filter(profesional_tratante=usuarioprofesional).order_by('apellido')
 
-    paginador = Paginator(consulta, 25)
+    paginador = Paginator(consulta, 20)
 
     if "page" in request.GET:
         page = request.GET.get('page')
