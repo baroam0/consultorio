@@ -28,10 +28,18 @@
 
         <form action="/pacientelistado" method="GET">
             <div class="form-inline">
-                <div class="col-3">
+                <div class="col-2">
                 </div>
 
-                <div class="col-6">
+                <div class="col-8">
+
+                    <select class="form-control" id="selectProfesional" name="selectProfesional">
+                        <option value=0>----------------------</option>
+                        {%for profesional in profesionales%}
+                        <option value={{profesional.pk}}>{{profesional}}</option>
+                        {%endfor%}
+                    </select>
+
                     <input class="form-control" id="txtBuscar" name="txtBuscar" placeholder="Buscar....">
                     <button type="submit" class="btn btn-default" title="Buscar!">
                         <i class="fas fa-search"></i>
@@ -50,7 +58,7 @@
                     </button>
                 </div>
 
-                <div class="col-3">
+                <div class="col-2">
                 </div>
             </div>
 
@@ -162,6 +170,17 @@
 {% block js_extra %}
     <script>
 
+        $(document).ready(function () {
+            var selectProfesional = "";
+            selectProfesional = ObtenerParametroURL();
+
+            if(selectProfesional==null){
+            }else{
+                $('#selectProfesional').val(selectProfesional);
+            }
+        });
+        
+
         function ReporteListado(){
             var origin   = window.location.origin;
             var url = window.location.href;
@@ -208,6 +227,13 @@
                 //triggering the function
                 downloadLink.click();
             }
+        }
+
+        function ObtenerParametroURL(){
+            var queryString = window.location.search;
+            var urlParams = new URLSearchParams(queryString);
+            var parametroprofesional = urlParams.get('selectProfesional');
+            return parametroprofesional;
         }
 
     </script>

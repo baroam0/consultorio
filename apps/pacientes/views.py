@@ -24,40 +24,64 @@ def listadopaciente(request):
         usuario = User.objects.get(username=str(request.user.username))
         if not usuario.is_staff:
             usuarioprofesional = Profesional.objects.get(usuario=usuario)
+    
+    if "selectProfesional" in request.GET:
+        parametro_profesional = request.GET.get("selectProfesional")
+        if parametro_profesional == 0:
+            #parametro_profesional = None
+            profesional = Profesional.objects.none()
+        else: 
+            profesional = Profesional.objects.get(pk=int(parametro_profesional))
+    else:
+        profesional = Profesional.objects.none()
 
     if "txtBuscar" in request.GET:
-        parametro = request.GET.get("txtBuscar")        
+        parametro = request.GET.get("txtBuscar")
         if usuario.is_staff:
-            consulta = Paciente.objects.filter(
-                Q(apellido__icontains=parametro) |
-                Q(nombre__contains=parametro) |
-                Q(ocupacion__contains=parametro)
-            ).order_by('apellido')
+            if parametro == "":
+                consulta = Paciente.objects.filter(
+                    profesional_tratante=profesional
+                ).order_by('apellido')
+            else:
+                consulta = Paciente.objects.filter(
+                    Q(apellido__icontains=parametro) |
+                    Q(nombre__contains=parametro) |
+                    Q(ocupacion__contains=parametro)
+                ).order_by('apellido')
         else:
-            consulta = Paciente.objects.filter(
-                Q(apellido__icontains=parametro) |
-                Q(nombre__contains=parametro) |
-                Q(ocupacion__contains=parametro)
-            ).filter(profesional_tratante=usuarioprofesional).order_by('apellido')
-            #consulta = consulta.filter(profesional_tratante=usuarioprofesional)            
+            if parametro == "":
+                consulta = Paciente.objects.filter(
+                    profesional_tratante=usuarioprofesional).order_by('apellido')
+            else:
+                consulta = Paciente.objects.filter(
+                    Q(apellido__icontains=parametro) |
+                    Q(nombre__contains=parametro) |
+                    Q(ocupacion__contains=parametro)
+                ).filter(profesional_tratante=usuarioprofesional).order_by('apellido')
     else:
         parametro = ""
         if usuario.is_staff:
-            consulta = Paciente.objects.all().order_by('apellido')
+            if profesional:
+                consulta = Paciente.objects.filter(profesional_tratante=profesional).order_by('apellido')
+            else:
+                consulta = Paciente.objects.all().order_by('apellido')
         else:
             consulta = Paciente.objects.filter(profesional_tratante=usuarioprofesional).order_by('apellido')
 
     paginador = Paginator(consulta, 25)
+
     if "page" in request.GET:
         page = request.GET.get('page')
     else:
         page = 1
     resultados = paginador.get_page(page)
 
+    profesionales = Profesional.objects.all()
+
     if parametro != "":
-        return render(request, 'pacientes/paciente_list.html', {'resultados': resultados, 'parametro': parametro})
+        return render(request, 'pacientes/paciente_list.html', {'resultados': resultados, 'parametro': parametro, 'profesionales': profesionales})
     else:
-        return render(request, 'pacientes/paciente_list.html', {'resultados': resultados})
+        return render(request, 'pacientes/paciente_list.html', {'resultados': resultados, 'profesionales': profesionales})
 
 
 def nuevopaciente(request):
