@@ -27,7 +27,7 @@ def listadopaciente(request):
     
     if "selectProfesional" in request.GET:
         parametro_profesional = request.GET.get("selectProfesional")
-        if parametro_profesional == 0:
+        if parametro_profesional == "0" or parametro_profesional == "" or parametro_profesional == None:
             #parametro_profesional = None
             profesional = Profesional.objects.none()
         else: 
@@ -39,10 +39,15 @@ def listadopaciente(request):
         parametro = request.GET.get("txtBuscar")
         if usuario.is_staff:
             if parametro == "":
-                consulta = Paciente.objects.filter(
-                    profesional_tratante=profesional
-                ).order_by('apellido')
+                print("********************************************************************")
+                if not profesional:
+                    consulta = Paciente.objects.all().order_by('apellido')
+                else:
+                    consulta = Paciente.objects.filter(
+                        profesional_tratante=profesional
+                    ).order_by('apellido')
             else:
+                
                 consulta = Paciente.objects.filter(
                     Q(apellido__icontains=parametro) |
                     Q(nombre__contains=parametro) |
@@ -70,10 +75,13 @@ def listadopaciente(request):
 
     paginador = Paginator(consulta, 20)
 
+    print(paginador)
+
     if "page" in request.GET:
         page = request.GET.get('page')
     else:
         page = 1
+    
     resultados = paginador.get_page(page)
 
     profesionales = Profesional.objects.all()
