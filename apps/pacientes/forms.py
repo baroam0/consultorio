@@ -20,8 +20,8 @@ class PacienteForm(forms.ModelForm):
     )
     numero_documento = forms.CharField(label="Numero Documento", required=True)
     fecha_nacimiento = forms.DateField(
-        label="Fecha Nacimiento", required=True)
-    telefono = forms.CharField(label="Telefono", required=True)
+        label="Fecha Nacimiento", required=False)
+    telefono = forms.CharField(label="Telefono", required=False)
     telefono_opcional = forms.CharField(
         label="Telefono Opcional", required=False)
     correo_electronico = forms.EmailField(
@@ -32,7 +32,7 @@ class PacienteForm(forms.ModelForm):
     profesional_tratante = forms.ModelChoiceField(
         queryset=Profesional.objects.all().order_by("usuario__last_name"),
         label = 'Profesional Tratante',
-        required=True,
+        required=False,
     )
     medicacion = forms.CharField(label="Medicación", required=False)
     fue_al_psicologo = forms.CharField(label="Fue al Psicologo", required=False)

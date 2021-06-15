@@ -39,7 +39,6 @@ def listadopaciente(request):
         parametro = request.GET.get("txtBuscar")
         if usuario.is_staff:
             if parametro == "":
-                print("********************************************************************")
                 if not profesional:
                     consulta = Paciente.objects.all().order_by('apellido')
                 else:

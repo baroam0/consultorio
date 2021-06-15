@@ -46,9 +46,11 @@ class Paciente(models.Model):
     observacion = models.TextField(null=True, blank=True)
 
     def get_edad(self):
-        hoy = datetime.today().date()
-        #fechanac = datetime.strptime(fechanac, "%Y-%m-%d")
-        anios = int((hoy - self.fecha_nacimiento).days/365.25)
+        anios = ""
+        if self.fecha_nacimiento:
+            hoy = datetime.today().date()
+            #fechanac = datetime.strptime(fechanac, "%Y-%m-%d")
+            anios = int((hoy - self.fecha_nacimiento).days/365.25)
         return anios
 
     def __str__(self):
