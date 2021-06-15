@@ -37,6 +37,18 @@ def validaturnoedicion(turno_id,fecha_hora,paciente,profesional):
         return 0
 
 
+@csrf_exempt
+def borrarturno(request, pk):
+    turno_id = request.POST['turno_id']
+    turno = Turno.objects.get(pk=int(turno_id))
+    turno.delete()
+    data = {
+        "status": 200
+    }
+
+    return data
+
+
 def listadoturno(request):
     """
     Funcion mostrar solamente el calendario y los turnos de un solo profesional

@@ -143,6 +143,11 @@
                         <i class="fas fa-times-circle"></i>
                         Cerrar
                     </button>
+
+                    <button type="button" class="btn btn-danger" >
+                        <i class="fas fa-trash"></i>
+                        Borrar
+                    </button>
                     
                     <button type="button" class="btn btn-primary" onclick="javascrit:GrabarTurno()">
                         <i class="fas fa-save"></i> 
@@ -231,6 +236,16 @@
             })
             calendar.render();
         });
+
+        function BorrarTurno(){
+            $.ajax({
+                type: "POST",
+                url: "/turnoborrar/" + turno_id,
+                dataType: "dataType",
+                success: function (response) {
+                }
+            });
+        }
 
         function GrabarTurno(){
             if(editar==true){

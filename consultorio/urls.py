@@ -37,7 +37,7 @@ from apps.pacientes.views import listadopaciente, nuevopaciente, \
 from apps.profesionales.views import listadoprofesional, \
     editarprofesional, perfil, crearprofesional
 
-from apps.turnos.views import listadoturno, nuevoturno, editarturno, cargaturnomodal
+from apps.turnos.views import borrarturno, listadoturno, nuevoturno, editarturno, cargaturnomodal
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -77,6 +77,7 @@ urlpatterns = [
     path('profesionaleditar/<int:pk>/', editarprofesional),
     path('turnolistado/', listadoturno),
     path('turnonuevo/', nuevoturno),
+    path('turnoborrar/<int:pk>', borrarturno),
     path('turnoeditar/<int:pk>/', editarturno),
     path('cargaturnomodal/<int:pk>/', cargaturnomodal),
     path('estadisticaobrasocialmes/', estadisticaobrasocialmes),
