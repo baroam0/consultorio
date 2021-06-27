@@ -144,7 +144,7 @@
                         Cerrar
                     </button>
 
-                    <button type="button" class="btn btn-danger" >
+                    <button type="button" id="btn-modal-borrar" class="btn btn-danger" onclick="javascript:BorrarTurno()" >
                         <i class="fas fa-trash"></i>
                         Borrar
                     </button>
@@ -238,18 +238,24 @@
         });
 
         function BorrarTurno(){
-            $.ajax({
-                type: "POST",
-                url: "/turnoborrar/" + turno_id,
-                dataType: "dataType",
-                success: function (response) {
-                }
-            });
+
+            var mensaje = "Desea borrar el turno?";
+            var confirmar = confirm(mensaje);
+
+            if(confirmar == true){
+                $.ajax({
+                    type: "DELETE",
+                    url: "/turnoborrar/" + turno_id + "/",
+                    success: function (response) {
+                        alert(response.mensaje);
+                        location.reload(true);
+                    }
+                });
+            }
         }
 
         function GrabarTurno(){
             if(editar==true){
-                
                 var profesional_id = $("#select_profesional_busqueda").val();
                 var paciente_id = $("#modal-select-paciente").val();
                 var fecha = $("#reservationdate").find("input").val();
@@ -336,7 +342,9 @@
         }
 
         function CargaTurnoModal(id){
-            editar = true
+            editar = true;
+            $("#btn-modal-borrar").prop('disabled', false);
+
             $("#modal-turno").modal();
 
             $.ajax({
@@ -357,26 +365,12 @@
                     document.getElementById("modal-chk-entregaparcial").checked = response.entrega_parcial;
                     $("#modal-observacion").val(response.observacion)
                 }
-
-                /*
-                "turno_id": turno.pk,
-                "paciente_id": turno.paciente.id,
-                "paciente": str(turno.paciente.apellido) + "," + str(turno.paciente.nombre),
-                "fecha": str(turno.fechahora.day) + "/" + str(turno.fechahora.month) + "/" + str(turno.fechahora.year),
-                "hora": str(turno.fechahora.hour) + ":" + str(turno.fechahora.minute),
-                "obrasocial_id": turno.obrasocial.pk,
-                "obrasocial": turno.obrasocial.descripcion,
-                "obrasocial_abreviatura": turno.obrasocial.abreviatura,
-                "asistio": turno.asistio,
-                "entrega": turno.entrega,
-                "entrega_parcial": turno.entrega_parcial,
-                "observacion": turno.observacion
-                */
-
             });
         }
 
         function NuevoTurno(){
+            $("#btn-modal-borrar").prop('disabled', true);
+
             if($("#select_profesional_busqueda").val()==0){
                 alert("Por favor elija un profesional")
             }else{

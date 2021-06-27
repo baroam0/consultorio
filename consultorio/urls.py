@@ -77,7 +77,7 @@ urlpatterns = [
     path('profesionaleditar/<int:pk>/', editarprofesional),
     path('turnolistado/', listadoturno),
     path('turnonuevo/', nuevoturno),
-    path('turnoborrar/<int:pk>', borrarturno),
+    path('turnoborrar/<int:pk>/', borrarturno),
     path('turnoeditar/<int:pk>/', editarturno),
     path('cargaturnomodal/<int:pk>/', cargaturnomodal),
     path('estadisticaobrasocialmes/', estadisticaobrasocialmes),

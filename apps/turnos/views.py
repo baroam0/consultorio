@@ -26,7 +26,6 @@ def validaturno(fecha_hora,paciente,profesional):
 
 
 def validaturnoedicion(turno_id,fecha_hora,paciente,profesional):
-    
     consulta = Turno.objects.filter(
         fechahora = fecha_hora,
         profesional = profesional
@@ -39,14 +38,14 @@ def validaturnoedicion(turno_id,fecha_hora,paciente,profesional):
 
 @csrf_exempt
 def borrarturno(request, pk):
-    turno_id = request.POST['turno_id']
-    turno = Turno.objects.get(pk=int(turno_id))
-    turno.delete()
-    data = {
-        "status": 200
-    }
-
-    return data
+    if request.method == "DELETE":
+        turno = Turno.objects.get(pk=pk)
+        turno.delete()
+        data = {
+            "mensaje": "Se ha borrado el turno",
+        }
+    
+    return JsonResponse(data)
 
 
 def listadoturno(request):
@@ -124,8 +123,11 @@ def nuevoturno(request):
         entregaparcial = False
     else:
         entregaparcial = True
-    
-    valor = validaturno(fecha_hora_obj,paciente,profesional)
+
+    if profesional.pk != 8:
+        valor = validaturno(fecha_hora_obj,paciente,profesional)
+    else:
+        valor = 0
 
     if valor == 0:
         turno = Turno(
@@ -213,10 +215,11 @@ def editarturno(request, pk):
         entregaparcial = False
     else:
         entregaparcial = True
-
-    valor = validaturnoedicion(turno.pk,fecha_hora_obj,paciente,profesional)
-
-    print(valor)
+    
+    if profesional.pk != 8:
+        valor = validaturnoedicion(turno.pk,fecha_hora_obj,paciente,profesional)
+    else:
+        valor = 0
 
     if valor == 0:
         turno.fechahora = fecha_hora_obj
