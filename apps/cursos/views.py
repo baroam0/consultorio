@@ -20,4 +20,13 @@ def listadocurso(request):
     resultados = paginador.get_page(page)
     return render(request, 'cursos/curso_list.html', {'resultados': resultados})
 
+
+def nuevocurso(request):
+    if resquest.POST:
+
+        
+
+
+
+
 # Create your views here.

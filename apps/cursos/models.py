@@ -29,7 +29,7 @@ class Alumno(models.Model):
 
 class Curso(models.Model):
     descripcion = models.CharField(max_length=100, null=False, blank=False, unique=True)
-    dureacion = models.CharField(max_length=100, null=False, blank=False)
+    duracion = models.CharField(max_length=100, null=True, blank=True)
 
     def __str__(self):
         return self.descripcion
