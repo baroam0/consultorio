@@ -24,7 +24,7 @@ from apps.catalogosenfermedades.views import ajaxcatalogo
 
 from apps.cursos.views import listadocurso
 
-from apps.estadisticas.views import (estadisticaobrasocialmes, estadisticapacientemes,
+from apps.estadisticas.views import (estadisticaobrasocialmes, estadisticapacientemes, \
     estadisticaconsultatotalturnos, estadisticaconsultapacientemes)
 
 from apps.obrassociales.views import editarobrasocial, nuevaobrasocial, \

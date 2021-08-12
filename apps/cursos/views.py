@@ -1,8 +1,9 @@
 
-
+from django.contrib import messages
 from django.core.paginator import Paginator
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
+from .forms import CursoForm
 from .models import Curso
 
 
@@ -22,11 +23,32 @@ def listadocurso(request):
 
 
 def nuevocurso(request):
-    if resquest.POST:
+    if request.POST:
+        form = CursoForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "SE HA GRABADO EL CURSO")
+            return redirect('/listadocurso')
+        else:
+            return render(request, 'cursos/cursos_nuevo.html', {"form": form})
+    else:
+        form = CursoForm()
+        return render(request, 'cursos/cursos_nuevo.html', {"form": form})
 
-        
 
-
+def editarcurso(request, pk):
+    consulta = Curso.objects.get(pk=pk)
+    if request.POST:
+        form = CursoForm(request.POST, instance=consulta)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "SE HA ACTUALIZADO LOS DATOS DEL CURSO")
+            return redirect('/listadocurso')
+        else:
+            return render(request, 'cursos/obrasocial_edit.html', {"form": form})
+    else:
+        form = CursoForm(instance=consulta)
+        return render(request, 'cursos/curso_edit.html', {"form": form})
 
 
 # Create your views here.
