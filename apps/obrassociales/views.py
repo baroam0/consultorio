@@ -9,7 +9,6 @@ from .forms import ObraSocialForm, PrestacionForm, NucleadorPrestacionForm
 from .models import ObraSocial, Prestacion, NucleadorPrestacion
 
 from django.core.paginator import Paginator
-from django.shortcuts import render
 
 
 def obrasociallistado(request):
