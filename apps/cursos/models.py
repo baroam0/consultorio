@@ -38,9 +38,12 @@ class Curso(models.Model):
     def __str__(self):
         return self.descripcion
 
-    def save(self):
+    def save(self, *args, **kwargs):
         hoy = datetime.today()
-        hoy_str = hoy.strftime("%d-%m-%Y")
+        #hoy_str = hoy.strftime("%d-%m-%Y")
+        hoy_str = hoy.strftime("%Y-%m-%d")
+        self.descripcion = str(self.descripcion) + "_" + str(hoy_str)
+        super(Curso, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = "Cursos"

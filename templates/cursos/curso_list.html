@@ -23,7 +23,7 @@
             {% endfor %}
         {% endif %}
 
-        <form action="/obrasociallistado" method="GET">
+        <form action="/listadocurso" method="GET">
             <div class="form-inline">
                 <div class="col-4">
                 </div>
@@ -35,13 +35,12 @@
                         <i class="fas fa-search"></i>
                     </button>
 
-                    <button type="button" class="btn btn-default" title="Agregar Obra Social!" onclick="location.href='/obrasocialnuevo'">
+                    <button type="button" class="btn btn-default" title="Agregar Obra Social!" onclick="location.href='/nuevocurso'">
                         <i class="fas fa-plus"></i>
                     </button>
                 </div>
             </div>
 
-        
             <br>
 
             <table class="table table-hover">
@@ -61,7 +60,7 @@
                         <td>{{resultado.telefono}}</td>
                         <td>{{resultado.telefono_opcional}}</td>
                         <td>
-                            <button type="button" class="btn btn-link btn-sm" onclick="location.href='/obrasocialeditar/' + {{ resultado.pk }}">
+                            <button type="button" class="btn btn-link btn-sm" onclick="location.href='/editarcurso/' + {{ resultado.pk }}">
                                 <i class="fas fa-pencil-alt"></i>
                             </button>
                         </td>
@@ -105,9 +104,6 @@
                     {% endif %}
                 </ul>
             </nav>
-
-            
-
         </form>
 
     </div>
