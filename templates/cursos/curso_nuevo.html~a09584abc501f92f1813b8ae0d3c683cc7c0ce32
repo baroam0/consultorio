@@ -49,13 +49,8 @@
 
 
     <script>
-<<<<<<< HEAD
-        function IrListadoCurso() {
-            window.location.replace("/listadocurso");
-=======
         function IrListadoObraSocial() {
             window.location.replace("/obrasociallistado");
->>>>>>> a09584abc501f92f1813b8ae0d3c683cc7c0ce32
         }
     </script>
 
