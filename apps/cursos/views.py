@@ -1,5 +1,7 @@
 
+
 from django.contrib import messages
+from django.db import IntegrityError
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 
@@ -26,14 +28,18 @@ def nuevocurso(request):
     if request.POST:
         form = CursoForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, "SE HA GRABADO EL CURSO")
-            return redirect('/listadocurso')
+            try:
+                form.save()
+                messages.success(request, "SE HA GRABADO EL CURSO")
+                return redirect('/listadocurso')
+            except IntegrityError as e:
+                messages.success(request, "YA EXISTE UN CURSO CON ESE NOMBRE.")
+                return render(request, 'cursos/curso_nuevo.html', {"form": form})    
         else:
-            return render(request, 'cursos/cursos_nuevo.html', {"form": form})
+            return render(request, 'cursos/curso_nuevo.html', {"form": form})
     else:
         form = CursoForm()
-        return render(request, 'cursos/cursos_nuevo.html', {"form": form})
+        return render(request, 'cursos/curso_nuevo.html', {"form": form})
 
 
 def editarcurso(request, pk):
@@ -41,11 +47,15 @@ def editarcurso(request, pk):
     if request.POST:
         form = CursoForm(request.POST, instance=consulta)
         if form.is_valid():
-            form.save()
-            messages.success(request, "SE HA ACTUALIZADO LOS DATOS DEL CURSO")
-            return redirect('/listadocurso')
+            try:
+                form.save()
+                messages.success(request, "SE HA ACTUALIZADO LOS DATOS DEL CURSO")
+                return redirect('/listadocurso')
+            except IntegrityError as e:
+                messages.success(request, "YA EXISTE UN CURSO CON ESE NOMBRE.")
+                return render(request, 'cursos/curso_nuevo.html', {"form": form})
         else:
-            return render(request, 'cursos/obrasocial_edit.html', {"form": form})
+            return render(request, 'cursos/curso_edit.html', {"form": form})
     else:
         form = CursoForm(instance=consulta)
         return render(request, 'cursos/curso_edit.html', {"form": form})
