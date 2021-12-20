@@ -5,8 +5,8 @@ from django.db import IntegrityError
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 
-from .forms import CursoForm
-from .models import Curso
+from .forms import CursoForm, ModuloForm
+from .models import Curso, Modulo
 
 
 def listadocurso(request):
@@ -60,5 +60,29 @@ def editarcurso(request, pk):
         form = CursoForm(instance=consulta)
         return render(request, 'cursos/curso_edit.html', {"form": form})
 
+
+def listadomodulo(request, pk):
+    curso = Curso.objects.get(pk=pk)
+    modulos = Modulo.objects.filter(curso=pk)
+    return render(request, 'cursos/modulo_list.html',
+        {
+            'curso': curso,
+            'modulos': modulos
+        }
+    )
+
+
+def nuevomodulo(request):
+    if request.POST:
+        form = ModuloForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "SE HA GRABADO EL MODULO")
+            return redirect('/listadocurso')
+        else:
+            return render(request, 'cursos/modulo_edit.html', {"form": form})
+    else:
+        form = ModuloForm()
+        return render(request, 'cursos/modulo_edit.html', {"form": form})
 
 # Create your views here.

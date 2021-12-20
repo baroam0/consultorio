@@ -6,11 +6,11 @@
     <div class="container">
         <br>
         <div class="row">
-            <div class="col-sm-4"></div>
-            <div class="col-sm-4">
-                <h2>Cursos</h2>
+            <div class="col-sm-2"></div>
+            <div class="col-sm-6">
+                <h2>Modulos - {{curso.descripcion.upper}}</h2>
             </div>
-            <div class="col-sm-4"></div>
+            <div class="col-sm-2"></div>
         </div>
 
         <hr>
@@ -30,12 +30,7 @@
                 <div class="col-4">
                 </div>
                 <div class="col-4">
-                    <input class="form-control" id="txtBuscar" name="txtBuscar" placeholder="Buscar....">
-                    <button type="submit" class="btn btn-default" title="Buscar!">
-                        <i class="fas fa-search"></i>
-                    </button>
-
-                    <button type="button" class="btn btn-default" title="Agregar Obra Social!" onclick="location.href='/nuevocurso'">
+                    <button type="button" class="btn btn-default" title="Agregar Obra Social!" onclick="location.href='/nuevomodulo'">
                         <i class="fas fa-plus"></i>
                     </button>
                 </div>
@@ -47,8 +42,7 @@
                 <thead>
                     <tr>
                         <th>Descripcion</th>
-                        <th>Duracion</th>
-                        <th>Modulos</th>
+                        <th>Valor</th>
                         <th>Editar</th>
                     </tr>
                 </thead>
@@ -59,8 +53,8 @@
                         <td>{{resultado.descripcion.upper }}</td>
                         <td>{{resultado.duracion}}</td>
                         <td>
-                            <button type="button" class="btn btn-link btn-sm" onclick="location.href='/listadomodulo/' + {{ resultado.pk }}">
-                                <i class="fas fa-plus"></i>
+                            <button type="button" class="btn btn-link btn-sm" onclick="location.href='/editarcurso/' + {{ resultado.pk }}">
+                                <i class="fas fa-pencil-alt"></i>
                             </button>
                         </td>
                         <td>
