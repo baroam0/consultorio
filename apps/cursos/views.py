@@ -85,4 +85,21 @@ def nuevomodulo(request):
         form = ModuloForm()
         return render(request, 'cursos/modulo_edit.html', {"form": form})
 
+
+def editarmodulo(request, pk):
+    consulta = Modulo.objects.get(pk=pk)
+    if request.POST:
+        form = ModuloForm(request.POST, instance=consulta)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "SE HA ACTUALIZADO LOS DATOS DEL MODULO")
+            return redirect('/listadocurso')
+        else:
+            return render(request, 'cursos/modulo_edit.html', {"form": form})
+    else:
+        form = CursoForm(instance=consulta)
+        return render(request, 'cursos/modulo_edit.html', {"form": form})
+
+
+
 # Create your views here.
