@@ -7,8 +7,8 @@ from .models import Curso, Modulo
 class CursoForm(forms.ModelForm):
     descripcion = forms.CharField(label="Descripcion", required=True)
     duracion = forms.CharField(label="Duracion", required=True)
-    presencial = forms.BooleanField(label="Presencial")
-    virtual = forms.BooleanField(label="Virtual ")
+    presencial = forms.BooleanField(label="Presencial", required=False)
+    virtual = forms.BooleanField(label="Virtual", required=False)
 
     def __init__(self, *args, **kwargs):
         super(CursoForm, self).__init__(*args, **kwargs)
@@ -25,16 +25,22 @@ class CursoForm(forms.ModelForm):
 
 class ModuloForm(forms.ModelForm):
     descripcion = forms.CharField(label="Descripcion", required=True)
+
+    curso = forms.ModelChoiceField(
+        queryset=Curso.objects.all(), 
+        label="Curso",
+        required=True
+    )
     valor = forms.DecimalField(label="Valor")
 
     def __init__(self, *args, **kwargs):
         super(ModuloForm, self).__init__(*args, **kwargs)
         for field in iter(self.fields):
-            if field == "descripcion" or field == "duracion":
-                self.fields[field].widget.attrs.update({
-                    'class': 'form-control'
-                })
+            # if field == "descripcion" or field == "duracion":
+            self.fields[field].widget.attrs.update({
+                'class': 'form-control'
+            })
 
     class Meta:
         model = Modulo
-        fields = ['descripcion', 'valor']
+        fields = ['descripcion', 'curso', 'valor']

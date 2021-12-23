@@ -51,14 +51,17 @@ class Curso(models.Model):
     virtual = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.descripcion.title
+        return self.descripcion.upper()
 
     def save(self, *args, **kwargs):
-        hoy = datetime.today()
-        #hoy_str = hoy.strftime("%d-%m-%Y")
-        hoy_str = hoy.strftime("%Y-%m-%d")
-        self.descripcion = str(self.descripcion) + "_" + str(hoy_str)
-        super(Curso, self).save(*args, **kwargs)
+        if self.pk is None:
+            hoy = datetime.today()
+            #hoy_str = hoy.strftime("%d-%m-%Y")
+            hoy_str = hoy.strftime("%Y-%m-%d")
+            self.descripcion = str(self.descripcion) + "_" + str(hoy_str)
+            super(Curso, self).save(*args, **kwargs)
+        else:
+            super(Curso, self).save(*args, **kwargs)
 
     class Meta:
         verbose_name_plural = "Cursos"
@@ -73,10 +76,10 @@ class Modulo(models.Model):
         decimal_places=2, max_digits=10, null=True, blank=True)
 
     def __str__(self):
-        return self.descripcion.title
+        return self.descripcion.title()
 
     class Meta:
-        verbose_name_plural = "Modulo"
+        verbose_name_plural = "Modulos"
 
 
 

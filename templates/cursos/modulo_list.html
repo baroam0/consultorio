@@ -30,7 +30,7 @@
                 <div class="col-4">
                 </div>
                 <div class="col-4">
-                    <button type="button" class="btn btn-default" title="Agregar Obra Social!" onclick="location.href='/nuevomodulo'">
+                    <button type="button" class="btn btn-default" title="Agregar Obra Social!" onclick="location.href='/nuevomodulo/{{curso.pk}}'">
                         <i class="fas fa-plus"></i>
                     </button>
                 </div>
@@ -48,17 +48,12 @@
                 </thead>
 
                 <tbody>
-                    {% for resultado in resultados %}
+                    {% for modulo in modulos %}
                     <tr>
-                        <td>{{resultado.descripcion.upper }}</td>
-                        <td>{{resultado.duracion}}</td>
+                        <td>{{modulo.descripcion.upper }}</td>
+                        <td>{{modulo.valor}}</td>
                         <td>
-                            <button type="button" class="btn btn-link btn-sm" onclick="location.href='/editarcurso/' + {{ resultado.pk }}">
-                                <i class="fas fa-pencil-alt"></i>
-                            </button>
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-link btn-sm" onclick="location.href='/editarcurso/' + {{ resultado.pk }}">
+                            <button type="button" class="btn btn-link btn-sm" onclick="location.href='/editarmodulo/' + {{ modulo.pk }}">
                                 <i class="fas fa-pencil-alt"></i>
                             </button>
                         </td>

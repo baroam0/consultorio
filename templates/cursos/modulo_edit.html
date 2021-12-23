@@ -10,7 +10,7 @@
             </div>
             
             <div class="col-sm">
-                <h3>Modulos del Curso</h3>
+                <h3>Datos del Modulo </h3>
             </div>
 
             <div class="col-sm">
@@ -67,9 +67,16 @@
 
 
     <script>
+
+        window.onload = function() {
+            var element = document.getElementById('id_curso');
+            element.value = {{curso.pk}};
+        };
+
         function IrListadoCurso() {
             window.location.replace("/listadocurso");
         }
+        
     </script>
 
 {% endblock %}

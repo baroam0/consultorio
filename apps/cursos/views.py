@@ -72,7 +72,8 @@ def listadomodulo(request, pk):
     )
 
 
-def nuevomodulo(request):
+def nuevomodulo(request, pk):
+    curso = Curso.objects.get(pk=pk)
     if request.POST:
         form = ModuloForm(request.POST)
         if form.is_valid():
@@ -97,7 +98,7 @@ def editarmodulo(request, pk):
         else:
             return render(request, 'cursos/modulo_edit.html', {"form": form})
     else:
-        form = CursoForm(instance=consulta)
+        form = ModuloForm(instance=consulta)
         return render(request, 'cursos/modulo_edit.html', {"form": form})
 
 
