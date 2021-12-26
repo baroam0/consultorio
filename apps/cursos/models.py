@@ -21,11 +21,14 @@ class Alumno(models.Model):
     nombre = models.CharField(max_length=100, null=False, blank=False)
     apellido = models.CharField(max_length=100, null=False, blank=False)
     tipodocumento = models.ForeignKey(TipoDocumento, on_delete=models.CASCADE)
-    numerodocumento = models.IntegerField(null=False, blank=False)
+    numerodocumento = models.IntegerField(null=False, blank=False, unique=True)
+    profesion = models.ForeignKey(Profesion, on_delete=models.CASCADE, default=1)
     matricula = models.IntegerField(null=True, blank=True)
+    telefono = models.CharField(max_length=100, null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
 
     def __str__(self):
-        return self.apellido + "," + self.nombre
+        return self.apellido.upper() + ", " + self.nombre.upper()
 
     class Meta:
         verbose_name_plural = "Alumnos"
@@ -74,14 +77,32 @@ class Modulo(models.Model):
     curso = models.ForeignKey(Curso, on_delete=models.CASCADE)
     valor = models.DecimalField(
         decimal_places=2, max_digits=10, null=True, blank=True)
+    finalizado = models.BooleanField()
 
     def __str__(self):
-        return self.descripcion.title()
+        return str(self.curso.descripcion.upper()) + ' - ' + self.descripcion.upper()
 
     class Meta:
         verbose_name_plural = "Modulos"
 
 
+class Inscripcion(models.Model):
+    fecha = models.DateField()
+    alumno = models.ForeignKey(Alumno, on_delete=models.CASCADE)
+    modulo = models.ForeignKey(Modulo, on_delete=models.CASCADE)
+    pagado = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        if self.pk is None:
+            hoy = datetime.today()
+            self.fecha = hoy
+            super(Inscripcion, self).save(*args, **kwargs)
+        else:
+            super(Inscripcion, self).save(*args, **kwargs)
+
+    class Meta:
+        unique_together = (('alumno', 'modulo'),)
+        verbose_name_plural = "Inscripccones"
 
 
 # Create your models here.

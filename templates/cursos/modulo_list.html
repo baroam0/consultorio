@@ -43,6 +43,7 @@
                     <tr>
                         <th>Descripcion</th>
                         <th>Valor</th>
+                        <th>Finalizado</th>
                         <th>Editar</th>
                     </tr>
                 </thead>
@@ -51,7 +52,14 @@
                     {% for modulo in modulos %}
                     <tr>
                         <td>{{modulo.descripcion.upper }}</td>
-                        <td>{{modulo.valor}}</td>
+                        <td>{{modulo.valor}} </td>
+                        <td>
+                            {% if modulo.finalizado == False %}
+                                <i class="fas fa-ban"></i>
+                            {% else %}
+                                <i class="fas fa-check-circle"></i>
+                            {% endif %}
+                        </td>
                         <td>
                             <button type="button" class="btn btn-link btn-sm" onclick="location.href='/editarmodulo/' + {{ modulo.pk }}">
                                 <i class="fas fa-pencil-alt"></i>

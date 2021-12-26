@@ -68,10 +68,12 @@
 
     <script>
 
+        {% if curso %}
         window.onload = function() {
             var element = document.getElementById('id_curso');
             element.value = {{curso.pk}};
         };
+        {% endif %}
 
         function IrListadoCurso() {
             window.location.replace("/listadocurso");

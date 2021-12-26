@@ -5,11 +5,11 @@
     <div class="container">
         <br>
         <div class="row">
-            <div class="col-sm-2"></div>
-            <div class="col-sm-8">
-                <h3>DETALLE PRESTACION DE OBRAS SOCIALES</h3>
+            <div class="col-sm-4"></div>
+            <div class="col-sm-4">
+                <h2>DATOS DEL ALUMNO</h2>
             </div>
-            <div class="col-sm-2"></div>
+            <div class="col-sm-4"></div>
         </div>
 
         <div class="row">
@@ -23,7 +23,6 @@
                     <div class="row">
                         <div class="col-2">
                             <button class="btn btn-primary" id="btn-guardar" type="submit">
-                                
                                 <i class="fas fa-check"></i>
                                 Aceptar
                             </button>
@@ -33,7 +32,7 @@
                         </div>
 
                         <div class="col-2">    
-                            <button type="button" class="btn btn-danger" id="btn-cancelar" onclick="IrListadoPrestacion()">
+                            <button type="button" class="btn btn-danger" id="btn-cancelar" onclick="IrListadoAlumno()">
                                 <i class="far fa-times-circle"></i>
                                 Cancelar
                             </button>
@@ -50,8 +49,8 @@
 
 
     <script>
-        function IrListadoPrestacion() {
-            window.location.replace("/nucleadorprestacionlistado");
+        function IrListadoAlumno() {
+            window.location.replace("/listadoalumno");
         }
     </script>
 

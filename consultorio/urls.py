@@ -23,7 +23,8 @@ from apps.bancos.views import listadodatosbancarios, nuevodatobancario, editarda
 from apps.catalogosenfermedades.views import ajaxcatalogo
 
 from apps.cursos.views import listadocurso, nuevocurso, editarcurso, nuevomodulo, \
-    listadomodulo, editarmodulo
+    listadomodulo, editarmodulo, listadoalumno, nuevoalumno, editaralumno, \
+    listadoinscripcion, nuevainscripcion, editarinscripcion
 
 from apps.estadisticas.views import (estadisticaobrasocialmes, estadisticapacientemes, \
     estadisticaconsultatotalturnos, estadisticaconsultapacientemes)
@@ -93,4 +94,10 @@ urlpatterns = [
     path('listadomodulo/<int:pk>/', listadomodulo),
     path('nuevomodulo/<int:pk>', nuevomodulo),
     path('editarmodulo/<int:pk>', editarmodulo),
+    path('listadoalumno/', listadoalumno),
+    path('nuevoalumno/', nuevoalumno),
+    path('editaralumno/<int:pk>', editaralumno),
+    path('listadoinscripcion/', listadoinscripcion),
+    path('nuevainscripcion/', nuevainscripcion),
+    path('editarinscripcion/<int:pk>', editarinscripcion)
 ]
